@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holiday Automation Workshop | Learn n8n with Festive Projects</title>
+  <meta name="description" content="Learn automation skills through fun, holiday-themed n8n projects. Build shareable workflows that spread cheer while mastering real-world skills.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --candy-red: #c41e3a;
+      --candy-red-dark: #9a1830;
+      --candy-red-glow: rgba(196, 30, 58, 0.4);
+      --pine-green: #1a5f4a;
+      --pine-green-light: #2d8a6e;
+      --pine-green-dark: #0d3d2f;
+      --gold: #d4a84b;
+      --gold-light: #f5d98a;
+      --gold-glow: rgba(212, 168, 75, 0.4);
+      --cream: #fdf8f2;
+      --warm-white: #fffefa;
+      --night-sky: #1a1a2e;
+      --night-sky-light: #252542;
+      --snow-white: #f8fafc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--night-sky);
+      color: var(--snow-white);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ============================================
+       SNOWFALL ANIMATION
+    ============================================ */
+    .snowfall {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -20px;
+      color: rgba(255, 255, 255, 0.8);
+      animation: fall linear infinite, sway ease-in-out infinite;
+      text-shadow: 0 0 3px rgba(255,255,255,0.5);
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-20px); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    @keyframes sway {
+      0%, 100% { margin-left: 0; }
+      25% { margin-left: 15px; }
+      75% { margin-left: -15px; }
+    }
+
+    /* ============================================
+       TWINKLING STARS BACKGROUND
+    ============================================ */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ============================================
+       HEADER / HERO SECTION
+    ============================================ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      background: 
+        radial-gradient(ellipse at 50% 0%, rgba(196, 30, 58, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(26, 95, 74, 0.2) 0%, transparent 40%),
+        radial-gradient(ellipse at 20% 90%, rgba(212, 168, 75, 0.1) 0%, transparent 40%),
+        var(--night-sky);
+      overflow: hidden;
+    }
+
+    /* String lights across top */
+    .string-lights {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      overflow: hidden;
+    }
+
+    .light-wire {
+      position: absolute;
+      top: 20px;
+      left: -5%;
+      width: 110%;
+      height: 40px;
+      border-bottom: 3px solid #333;
+      border-radius: 0 0 50% 50%;
+    }
+
+    .bulb {
+      position: absolute;
+      bottom: -8px;
+      width: 12px;
+      height: 18px;
+      border-radius: 50% 50% 45% 45%;
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    .bulb::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background: #444;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .bulb.red { background: #ff4757; box-shadow: 0 0 15px #ff4757, 0 0 30px rgba(255, 71, 87, 0.5); }
+    .bulb.green { background: #2ed573; box-shadow: 0 0 15px #2ed573, 0 0 30px rgba(46, 213, 115, 0.5); animation-delay: 0.3s; }
+    .bulb.gold { background: #ffd93d; box-shadow: 0 0 15px #ffd93d, 0 0 30px rgba(255, 217, 61, 0.5); animation-delay: 0.6s; }
+    .bulb.blue { background: #54a0ff; box-shadow: 0 0 15px #54a0ff, 0 0 30px rgba(84, 160, 255, 0.5); animation-delay: 0.9s; }
+
+    @keyframes glow {
+      0%, 100% { opacity: 1; filter: brightness(1); }
+      50% { opacity: 0.7; filter: brightness(0.8); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 900px;
+    }
+
+    .workshop-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212, 168, 75, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--snow-white) 0%, var(--gold-light) 50%, var(--snow-white) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 30px rgba(212, 168, 75, 0.3);
+    }
+
+    .hero-title .highlight {
+      display: block;
+      background: linear-gradient(135deg, var(--candy-red) 0%, #ff6b7a 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto 32px;
+      font-weight: 400;
+    }
+
+    .hero-tagline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 40px;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--candy-red) 0%, var(--candy-red-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 20px var(--candy-red-glow), 0 0 0 0 var(--candy-red-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--candy-red-glow), 0 0 0 4px rgba(196, 30, 58, 0.2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--snow-white);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.8rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .scroll-indicator .arrow {
+      font-size: 1.5rem;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+
+    /* ============================================
+       SECTION STYLES
+    ============================================ */
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--snow-white);
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ============================================
+       ABOUT SECTION
+    ============================================ */
+    .about-section {
+      padding: 100px 24px;
+      background: linear-gradient(180deg, var(--night-sky) 0%, var(--night-sky-light) 100%);
+    }
+
+    .about-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    @media (max-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .about-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .about-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-5px);
+      border-color: rgba(212, 168, 75, 0.3);
+    }
+
+    .about-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .about-card h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      color: var(--snow-white);
+      margin-bottom: 12px;
+    }
+
+    .about-card p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+    }
+
+    /* ============================================
+       AUTOMATIONS SECTION
+    ============================================ */
+    .automations-section {
+      padding: 100px 24px;
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(26, 95, 74, 0.15) 0%, transparent 50%),
+        var(--night-sky-light);
+    }
+
+    .automations-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .automations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 32px;
+    }
+
+    @media (max-width: 400px) {
+      .automations-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Automation Card */
+    .automation-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .automation-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--candy-red), var(--gold), var(--pine-green-light));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .automation-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(212, 168, 75, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .automation-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      padding: 32px 28px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .card-number {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--candy-red), var(--candy-red-dark));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 4px 15px var(--candy-red-glow);
+    }
+
+    .card-title-group {
+      flex: 1;
+    }
+
+    .card-emoji {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--snow-white);
+      margin-bottom: 6px;
+    }
+
+    .card-subtitle {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .card-body {
+      padding: 0 28px 28px;
+    }
+
+    /* Workflow visualization */
+    .workflow-visual {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .workflow-nodes {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .workflow-node {
+      background: var(--pine-green);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .workflow-arrow {
+      color: var(--gold);
+      font-size: 1.2rem;
+    }
+
+    /* Skills and sharing */
+    .card-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .meta-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .meta-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .meta-value {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Bonus section */
+    .card-bonus {
+      background: linear-gradient(135deg, rgba(212, 168, 75, 0.1), rgba(196, 30, 58, 0.05));
+      border: 1px dashed rgba(212, 168, 75, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .bonus-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .bonus-list {
+      list-style: none;
+    }
+
+    .bonus-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 6px;
+    }
+
+    .bonus-list li::before {
+      content: '🎁';
+      position: absolute;
+      left: 0;
+      font-size: 0.7rem;
+    }
+
+    /* Card action */
+    .card-action {
+      display: flex;
+      gap: 12px;
+    }
+
+    .card-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .card-btn-video {
+      background: var(--candy-red);
+      color: white;
+    }
+
+    .card-btn-video:hover {
+      background: var(--candy-red-dark);
+      box-shadow: 0 4px 20px var(--candy-red-glow);
+    }
+
+    .card-btn-resources {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--snow-white);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .card-btn-resources:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ============================================
+       COMING SOON CARDS
+    ============================================ */
+    .automation-card.coming-soon {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .automation-card.coming-soon .card-header::after {
+      content: 'Coming Soon';
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ============================================
+       FOOTER
+    ============================================ */
+    footer {
+      padding: 80px 24px;
+      background: var(--night-sky);
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-decoration {
+      font-size: 3rem;
+      margin-bottom: 24px;
+      letter-spacing: 16px;
+    }
+
+    .footer-tagline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .footer-text {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--gold);
+    }
+
+    .copyright {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.8rem;
+    }
+
+    /* ============================================
+       UTILITY CLASSES
+    ============================================ */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--candy-red), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Twinkling Stars Background -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Snowfall -->
+  <div class="snowfall" id="snowfall"></div>
+
+  <!-- ==========================================
+       HERO SECTION
+  ========================================== -->
+  <header class="hero">
+    <!-- String Lights -->
+    <div class="string-lights">
+      <div class="light-wire">
+        <div class="bulb red" style="left: 5%;"></div>
+        <div class="bulb green" style="left: 12%;"></div>
+        <div class="bulb gold" style="left: 19%;"></div>
+        <div class="bulb blue" style="left: 26%;"></div>
+        <div class="bulb red" style="left: 33%;"></div>
+        <div class="bulb green" style="left: 40%;"></div>
+        <div class="bulb gold" style="left: 47%;"></div>
+        <div class="bulb blue" style="left: 54%;"></div>
+        <div class="bulb red" style="left: 61%;"></div>
+        <div class="bulb green" style="left: 68%;"></div>
+        <div class="bulb gold" style="left: 75%;"></div>
+        <div class="bulb blue" style="left: 82%;"></div>
+        <div class="bulb red" style="left: 89%;"></div>
+        <div class="bulb green" style="left: 96%;"></div>
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <span class="workshop-badge">
+        <span>🎄</span>
+        <span>Free Learning Resource</span>
+      </span>
+
+      <h1 class="hero-title">
+        Holiday Automation
+        <span class="highlight">Workshop</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Learn real-world automation skills through fun, festive n8n projects you can share with friends and family.
+      </p>
+
+      <p class="hero-tagline">
+        ✨ Building Holiday Magic, One Workflow at a Time ✨
+      </p>
+
+      <div class="cta-group">
+        <a href="#automations" class="btn btn-primary">
+          <span>🎁</span>
+          <span>Start Learning</span>
+        </a>
+        <a href="#about" class="btn btn-secondary">
+          <span>Learn More</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Scroll to explore</span>
+      <span class="arrow">↓</span>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       ABOUT SECTION
+  ========================================== -->
+  <section class="about-section" id="about">
+    <div class="about-container">
+      <div class="section-header">
+        <span class="section-label">Why This Workshop?</span>
+        <h2 class="section-title">Learn by Building Something Fun</h2>
+        <p class="section-subtitle">
+          Holiday projects make learning stick. Each automation teaches real skills you'll use in business—wrapped in festive fun.
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <span class="about-icon">🎯</span>
+          <h3>Real Skills</h3>
+          <p>Every holiday project teaches business-ready automation skills: scheduling, APIs, data filtering, email campaigns, and more.</p>
+        </div>
+        <div class="about-card">
+          <span class="about-icon">🎁</span>
+          <h3>Shareable Results</h3>
+          <p>Build automations you can actually use—send holiday countdowns to family, jokes to friends, or festive alerts to your team.</p>
+        </div>
+        <div class="about-card">
+          <span class="about-icon">🚀</span>
+          <h3>Video Walkthroughs</h3>
+          <p>Follow along step-by-step with clear video tutorials. Perfect for beginners, valuable for experienced automators.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       AUTOMATIONS SECTION
+  ========================================== -->
+  <section class="automations-section" id="automations">
+    <div class="automations-container">
+      <div class="section-header">
+        <span class="section-label">🎄 The Workshops</span>
+        <h2 class="section-title">Holiday Automation Projects</h2>
+        <p class="section-subtitle">
+          Each project includes a video tutorial, workflow breakdown, and bonus ideas to make it your own.
+        </p>
+      </div>
+
+      <div class="automations-grid">
+
+        <!-- ========== AUTOMATION 1 ========== -->
+        <article class="automation-card">
+          <div class="card-header">
+            <div class="card-number">1</div>
+            <div class="card-title-group">
+              <span class="card-emoji">⏰</span>
+              <h3 class="card-title">Holiday Countdown Bot</h3>
+              <p class="card-subtitle">Posts "X days until Christmas!" to email daily</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="workflow-visual">
+              <div class="workflow-nodes">
+                <span class="workflow-node">Schedule Trigger</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Code Node</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Email Node</span>
+              </div>
+            </div>
+
+            <div class="card-meta">
+              <div class="meta-item">
+                <div class="meta-label">💝 Share With</div>
+                <div class="meta-value">Spouse, friends, family, coworkers</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">💼 Business Skill</div>
+                <div class="meta-value">Cron scheduling, notifications, reminders</div>
+              </div>
+            </div>
+
+            <div class="card-bonus">
+              <div class="bonus-header">✨ Bonus Ideas</div>
+              <ul class="bonus-list">
+                <li>Send a new holiday GIF each day (use a GIF API)</li>
+                <li>Suggest a holiday movie (read from DB or API)</li>
+                <li>Send holiday deal alerts (scrape or curate deals)</li>
+              </ul>
+            </div>
+
+            <div class="card-action">
+              <a href="#" class="card-btn card-btn-video">
+                <span>▶</span>
+                <span>Watch Tutorial</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ========== AUTOMATION 2 ========== -->
+        <article class="automation-card">
+          <div class="card-header">
+            <div class="card-number">2</div>
+            <div class="card-title-group">
+              <span class="card-emoji">🎅</span>
+              <h3 class="card-title">Holiday Joke & Fact Bot</h3>
+              <p class="card-subtitle">Sends daily jokes or facts from Google Sheets</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="workflow-visual">
+              <div class="workflow-nodes">
+                <span class="workflow-node">Schedule</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Code</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Sheets</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Filter</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Gmail</span>
+              </div>
+            </div>
+
+            <div class="card-meta">
+              <div class="meta-item">
+                <div class="meta-label">💝 Share With</div>
+                <div class="meta-value">Forward to family, post favorites on social</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">💼 Business Skill</div>
+                <div class="meta-value">Database reads, filtering, drip campaigns</div>
+              </div>
+            </div>
+
+            <div class="card-bonus">
+              <div class="bonus-header">✨ Bonus Ideas</div>
+              <ul class="bonus-list">
+                <li>Daily holiday recipes (meal plan countdown)</li>
+                <li>Gratitude prompts (team culture building)</li>
+                <li>Rotating testimonials to leads</li>
+              </ul>
+            </div>
+
+            <div class="card-action">
+              <a href="#" class="card-btn card-btn-video">
+                <span>▶</span>
+                <span>Watch Tutorial</span>
+              </a>
+              <a href="#" class="card-btn card-btn-resources">
+                <span>📎</span>
+                <span>Resources</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ========== AUTOMATION 3 (PLACEHOLDER) ========== -->
+        <article class="automation-card coming-soon">
+          <div class="card-header">
+            <div class="card-number">3</div>
+            <div class="card-title-group">
+              <span class="card-emoji">🎄</span>
+              <h3 class="card-title">Secret Santa Matcher</h3>
+              <p class="card-subtitle">Automatically assigns and notifies gift exchange pairs</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="workflow-visual">
+              <div class="workflow-nodes">
+                <span class="workflow-node">Form Trigger</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Code</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Email</span>
+              </div>
+            </div>
+
+            <div class="card-meta">
+              <div class="meta-item">
+                <div class="meta-label">💝 Share With</div>
+                <div class="meta-value">Family, friend groups, office teams</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">💼 Business Skill</div>
+                <div class="meta-value">Form processing, randomization, bulk email</div>
+              </div>
+            </div>
+
+            <div class="card-action">
+              <a href="#" class="card-btn card-btn-video" style="opacity: 0.5;">
+                <span>🔒</span>
+                <span>Coming Soon</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ========== AUTOMATION 4 (PLACEHOLDER) ========== -->
+        <article class="automation-card coming-soon">
+          <div class="card-header">
+            <div class="card-number">4</div>
+            <div class="card-title-group">
+              <span class="card-emoji">🎶</span>
+              <h3 class="card-title">Holiday Playlist Builder</h3>
+              <p class="card-subtitle">Curates daily song recommendations via Spotify API</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="workflow-visual">
+              <div class="workflow-nodes">
+                <span class="workflow-node">Schedule</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Spotify API</span>
+                <span class="workflow-arrow">→</span>
+                <span class="workflow-node">Slack/Email</span>
+              </div>
+            </div>
+
+            <div class="card-meta">
+              <div class="meta-item">
+                <div class="meta-label">💝 Share With</div>
+                <div class="meta-value">Create shared playlists with friends</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">💼 Business Skill</div>
+                <div class="meta-value">OAuth APIs, data enrichment, messaging</div>
+              </div>
+            </div>
+
+            <div class="card-action">
+              <a href="#" class="card-btn card-btn-video" style="opacity: 0.5;">
+                <span>🔒</span>
+                <span>Coming Soon</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       FOOTER
+  ========================================== -->
+  <footer>
+    <div class="footer-decoration">🎄 ⛄ 🎁 ❄️ 🦌</div>
+    <p class="footer-tagline">Building Holiday Magic, One Workflow at a Time</p>
+    <p class="footer-text">
+      A free learning resource for the automation-curious.<br>
+      Learn n8n through fun, festive projects you'll actually use.
+    </p>
+    <div class="footer-links">
+      <a href="#" class="footer-link">About</a>
+      <a href="#automations" class="footer-link">Workshops</a>
+      <a href="#" class="footer-link">n8n Docs</a>
+      <a href="#" class="footer-link">Contact</a>
+    </div>
+    <p class="copyright">
+      © 2024 Holiday Automation Workshop. Made with ❤️ and ☕
+    </p>
+  </footer>
+
+  <!-- ==========================================
+       SCRIPTS
+  ========================================== -->
+  <script>
+    // Generate twinkling stars
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      star.style.animationDuration = (2 + Math.random() * 2) + 's';
+      starsContainer.appendChild(star);
+    }
+
+    // Generate snowflakes
+    const snowfallContainer = document.getElementById('snowfall');
+    const snowflakeChars = ['❄', '❅', '❆', '•'];
+    
+    function createSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.className = 'snowflake';
+      snowflake.textContent = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+      snowflake.style.left = Math.random() * 100 + '%';
+      snowflake.style.fontSize = (0.5 + Math.random() * 1) + 'rem';
+      snowflake.style.opacity = 0.3 + Math.random() * 0.7;
+      
+      const fallDuration = 8 + Math.random() * 12;
+      const swayDuration = 2 + Math.random() * 3;
+      
+      snowflake.style.animationDuration = `${fallDuration}s, ${swayDuration}s`;
+      snowflake.style.animationDelay = `0s, ${Math.random() * 2}s`;
+      
+      snowfallContainer.appendChild(snowflake);
+      
+      // Remove after animation
+      setTimeout(() => {
+        snowflake.remove();
+      }, fallDuration * 1000);
+    }
+
+    // Create initial snowflakes
+    for (let i = 0; i < 30; i++) {
+      setTimeout(createSnowflake, i * 200);
+    }
+
+    // Continuously create new snowflakes
+    setInterval(createSnowflake, 400);
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
