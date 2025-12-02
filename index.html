@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Holiday Automation Workshop | Learn n8n with Festive Projects</title>
+  <title>Holiday Automation Walkthroughs | Learn n8n with Festive Projects</title>
   <meta name="description" content="Learn automation skills through fun, holiday-themed n8n projects. Build shareable workflows that spread cheer while mastering real-world skills.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -741,9 +741,98 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+
+    /* ============================================
+       VIDEO MODAL
+    ============================================ */
+    .video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .video-modal.active {
+      display: flex;
+    }
+
+    .video-modal-content {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      background: var(--night-sky);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .video-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .video-modal-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem;
+      color: var(--snow-white);
+    }
+
+    .video-modal-close {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      transition: color 0.3s ease;
+    }
+
+    .video-modal-close:hover {
+      color: var(--candy-red);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Video Modal -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-modal-content">
+      <div class="video-modal-header">
+        <h3 class="video-modal-title" id="videoModalTitle">Tutorial</h3>
+        <button class="video-modal-close" onclick="closeVideoModal()">&times;</button>
+      </div>
+      <div class="video-container">
+        <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
 
   <!-- Twinkling Stars Background -->
   <div class="stars" id="stars"></div>
@@ -783,7 +872,7 @@
 
       <h1 class="hero-title">
         Holiday Automation
-        <span class="highlight">Workshop</span>
+        <span class="highlight">Walkthroughs</span>
       </h1>
 
       <p class="hero-subtitle">
@@ -850,7 +939,7 @@
   <section class="automations-section" id="automations">
     <div class="automations-container">
       <div class="section-header">
-        <span class="section-label">🎄 The Workshops</span>
+        <span class="section-label">🎄 The Walkthroughs</span>
         <h2 class="section-title">Holiday Automation Projects</h2>
         <p class="section-subtitle">
           Each project includes a video tutorial, workflow breakdown, and bonus ideas to make it your own.
@@ -901,10 +990,10 @@
             </div>
 
             <div class="card-action">
-              <a href="#" class="card-btn card-btn-video">
+              <button class="card-btn card-btn-video" onclick="openVideoModal('Holiday Countdown Bot', 'VIDEO_ID_1')">
                 <span>▶</span>
                 <span>Watch Tutorial</span>
-              </a>
+              </button>
             </div>
           </div>
         </article>
@@ -955,10 +1044,10 @@
             </div>
 
             <div class="card-action">
-              <a href="#" class="card-btn card-btn-video">
+              <button class="card-btn card-btn-video" onclick="openVideoModal('Holiday Joke & Fact Bot', 'VIDEO_ID_2')">
                 <span>▶</span>
                 <span>Watch Tutorial</span>
-              </a>
+              </button>
               <a href="#" class="card-btn card-btn-resources">
                 <span>📎</span>
                 <span>Resources</span>
@@ -1065,12 +1154,12 @@
     </p>
     <div class="footer-links">
       <a href="#" class="footer-link">About</a>
-      <a href="#automations" class="footer-link">Workshops</a>
+      <a href="#automations" class="footer-link">Walkthroughs</a>
       <a href="#" class="footer-link">n8n Docs</a>
       <a href="#" class="footer-link">Contact</a>
     </div>
     <p class="copyright">
-      © 2024 Holiday Automation Workshop. Made with ❤️ and ☕
+      © 2024 Holiday Automation Walkthroughs. Made with ❤️ and ☕
     </p>
   </footer>
 
@@ -1133,6 +1222,49 @@
           target.scrollIntoView({ behavior: 'smooth' });
         }
       });
+    });
+
+    // Video Modal Functions
+    // Replace these placeholder IDs with your actual YouTube video IDs
+    const videoIds = {
+      'VIDEO_ID_1': 'YOUR_YOUTUBE_VIDEO_ID_HERE', // Holiday Countdown Bot
+      'VIDEO_ID_2': 'YOUR_YOUTUBE_VIDEO_ID_HERE'  // Holiday Joke & Fact Bot
+    };
+
+    function openVideoModal(title, videoKey) {
+      const modal = document.getElementById('videoModal');
+      const titleEl = document.getElementById('videoModalTitle');
+      const iframe = document.getElementById('videoFrame');
+
+      const videoId = videoIds[videoKey] || videoKey;
+
+      titleEl.textContent = title;
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const iframe = document.getElementById('videoFrame');
+
+      modal.classList.remove('active');
+      iframe.src = '';
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeVideoModal();
+      }
+    });
+
+    // Close modal on backdrop click
+    document.getElementById('videoModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeVideoModal();
+      }
     });
   </script>
 
