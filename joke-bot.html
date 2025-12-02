@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holiday Joke & Fact Bot | Holiday Automation Walkthroughs</title>
+  <meta name="description" content="Learn how to build a Holiday Joke & Fact Bot with n8n. Sends daily jokes or facts from a Google Sheet.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Nunito:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --candy-red: #c41e3a;
+      --candy-red-dark: #9a1830;
+      --candy-red-glow: rgba(196, 30, 58, 0.4);
+      --pine-green: #1a5f4a;
+      --pine-green-light: #2d8a6e;
+      --pine-green-dark: #0d3d2f;
+      --gold: #d4a84b;
+      --gold-light: #f5d98a;
+      --gold-glow: rgba(212, 168, 75, 0.4);
+      --cream: #fdf8f2;
+      --warm-white: #fffefa;
+      --night-sky: #1a1a2e;
+      --night-sky-light: #252542;
+      --snow-white: #f8fafc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--night-sky);
+      color: var(--snow-white);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Twinkling Stars */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 24px;
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--snow-white);
+    }
+
+    .nav-brand span {
+      font-size: 1.5rem;
+    }
+
+    .nav-brand-text {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-back:hover {
+      color: var(--gold);
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      padding: 140px 24px 80px;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(196, 30, 58, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(26, 95, 74, 0.2) 0%, transparent 40%),
+        var(--night-sky);
+      z-index: 1;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .project-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212, 168, 75, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-emoji {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--snow-white) 0%, var(--gold-light) 50%, var(--snow-white) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-description {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Main Content */
+    .main-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* Video Section */
+    .video-section {
+      margin-bottom: 60px;
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--night-sky-light), var(--night-sky));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .video-placeholder-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 40px;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sections */
+    .section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--snow-white);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title-icon {
+      font-size: 1.3rem;
+    }
+
+    /* Workflow Diagram */
+    .workflow-diagram {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .workflow-nodes {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .workflow-node {
+      background: linear-gradient(135deg, var(--pine-green), var(--pine-green-dark));
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(26, 95, 74, 0.3);
+    }
+
+    .workflow-arrow {
+      color: var(--gold);
+      font-size: 1.3rem;
+    }
+
+    /* Pre-work Section */
+    .prework-section {
+      background: linear-gradient(135deg, rgba(26, 95, 74, 0.15), rgba(26, 95, 74, 0.05));
+      border: 1px solid rgba(45, 138, 110, 0.3);
+    }
+
+    .prework-list {
+      list-style: none;
+    }
+
+    .prework-list li {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .prework-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--pine-green-light);
+      font-weight: bold;
+    }
+
+    /* Code Block */
+    .code-block {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 16px;
+      overflow-x: auto;
+    }
+
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .code-block-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .code-block pre {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.85);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Steps */
+    .steps-list {
+      list-style: none;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--candy-red), var(--candy-red-dark));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: white;
+    }
+
+    .step-content h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--snow-white);
+      margin-bottom: 4px;
+    }
+
+    .step-content p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .sidebar-card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--snow-white);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Share Ideas */
+    .share-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .share-item:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Skills Tags */
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-tag {
+      background: rgba(212, 168, 75, 0.15);
+      border: 1px solid rgba(212, 168, 75, 0.3);
+      color: var(--gold-light);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* Bonus Ideas */
+    .bonus-card {
+      background: linear-gradient(135deg, rgba(212, 168, 75, 0.1), rgba(196, 30, 58, 0.05));
+      border: 1px dashed rgba(212, 168, 75, 0.4);
+    }
+
+    .bonus-list {
+      list-style: none;
+    }
+
+    .bonus-list li {
+      position: relative;
+      padding-left: 28px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    .bonus-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .bonus-list li::before {
+      content: '🎁';
+      position: absolute;
+      left: 0;
+      font-size: 0.9rem;
+    }
+
+    .bonus-description {
+      display: block;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 4px;
+    }
+
+    /* Resources Card */
+    .resources-card {
+      background: linear-gradient(135deg, rgba(84, 160, 255, 0.1), rgba(84, 160, 255, 0.05));
+      border: 1px solid rgba(84, 160, 255, 0.3);
+    }
+
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      color: var(--snow-white);
+      text-decoration: none;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .resource-link:last-child {
+      margin-bottom: 0;
+    }
+
+    .resource-link:hover {
+      background: rgba(0, 0, 0, 0.3);
+      transform: translateX(4px);
+    }
+
+    .resource-link span:first-child {
+      font-size: 1.2rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      text-align: center;
+      padding: 60px 24px;
+      background: linear-gradient(180deg, transparent 0%, rgba(26, 95, 74, 0.1) 100%);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .cta-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--snow-white);
+      margin-bottom: 16px;
+    }
+
+    .cta-text {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 24px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--candy-red) 0%, var(--candy-red-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 20px var(--candy-red-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--candy-red-glow);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--snow-white);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 24px;
+      background: var(--night-sky);
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-text {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.85rem;
+    }
+
+    .footer-text a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Twinkling Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-content">
+      <a href="index.html" class="nav-brand">
+        <span>🎄</span>
+        <span class="nav-brand-text">Holiday Automations</span>
+      </a>
+      <a href="index.html#automations" class="nav-back">
+        <span>←</span>
+        <span>All Walkthroughs</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-content">
+      <span class="project-badge">
+        <span>Walkthrough 2</span>
+      </span>
+      <span class="hero-emoji">🎅</span>
+      <h1 class="hero-title">Holiday Joke & Fact Bot</h1>
+      <p class="hero-description">
+        Sends a daily Christmas joke or fun fact from a curated Google Sheet. Perfect for learning database reads and filtering.
+      </p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Video Section -->
+    <section class="video-section">
+      <div class="video-wrapper">
+        <!-- Replace VIDEO_ID with your actual YouTube video ID -->
+        <div class="video-placeholder">
+          <span class="video-placeholder-icon">🎬</span>
+          <span>Video coming soon</span>
+        </div>
+        <!-- Uncomment and add your video ID when ready:
+        <iframe
+          src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+        -->
+      </div>
+    </section>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+
+      <!-- Main Column -->
+      <div class="main-column">
+
+        <!-- Pre-work Section -->
+        <section class="section prework-section">
+          <h2 class="section-title">
+            <span class="section-title-icon">📝</span>
+            Pre-work (Before Recording)
+          </h2>
+          <ul class="prework-list">
+            <li>Create a Google Sheet with columns: <strong>days_until_xmas</strong>, <strong>type</strong>, <strong>content</strong>, <strong>source</strong></li>
+            <li>Populate with 30 jokes/facts using AI (prompt below)</li>
+            <li>Connect your Google account to n8n</li>
+          </ul>
+
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-block-title">AI Prompt to Generate Content</span>
+            </div>
+            <pre>Generate 30 rows of Christmas content for a daily email countdown.
+
+Format as a table with these columns:
+- day_number (1-25, with days 24 and 25 having 2-3 extras each)
+- content_type (joke or fact)
+- content (the actual joke or fact)
+
+Requirements:
+- Mix roughly 60% jokes, 40% facts
+- Family-friendly and age-appropriate for kids
+- Jokes should be actually funny, not just puns
+- Facts should be interesting conversation starters
+- Day 25 content should feel extra special for Christmas Day
+
+Output as a table I can copy directly into Google Sheets.</pre>
+          </div>
+        </section>
+
+        <!-- Workflow Overview -->
+        <section class="section">
+          <h2 class="section-title">
+            <span class="section-title-icon">⚡</span>
+            Workflow Overview
+          </h2>
+          <div class="workflow-diagram">
+            <div class="workflow-nodes">
+              <span class="workflow-node">Schedule</span>
+              <span class="workflow-arrow">→</span>
+              <span class="workflow-node">Code</span>
+              <span class="workflow-arrow">→</span>
+              <span class="workflow-node">Sheets</span>
+              <span class="workflow-arrow">→</span>
+              <span class="workflow-node">Filter</span>
+              <span class="workflow-arrow">→</span>
+              <span class="workflow-node">Gmail</span>
+            </div>
+          </div>
+          <p style="color: rgba(255,255,255,0.7);">
+            This workflow runs daily, calculates the current day number, reads your content from Google Sheets, filters for today's joke or fact, and sends it via Gmail.
+          </p>
+        </section>
+
+        <!-- Step by Step -->
+        <section class="section">
+          <h2 class="section-title">
+            <span class="section-title-icon">📋</span>
+            Step-by-Step Guide
+          </h2>
+          <ol class="steps-list">
+            <li class="step-item">
+              <span class="step-number">1</span>
+              <div class="step-content">
+                <h4>Schedule Trigger</h4>
+                <p>Set up a cron trigger to run daily at 9:00 AM, just like the countdown bot.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <span class="step-number">2</span>
+              <div class="step-content">
+                <h4>Code Node (Calculate Day)</h4>
+                <p>Calculate days until December 25th AND the current day number (1-25) to match your spreadsheet.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <span class="step-number">3</span>
+              <div class="step-content">
+                <h4>Google Sheets Node</h4>
+                <p>Read all rows from your prepared spreadsheet containing the jokes and facts.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <span class="step-number">4</span>
+              <div class="step-content">
+                <h4>Code Node (Filter)</h4>
+                <p>Filter for today's day number. If multiple entries exist for the same day, pick one randomly.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <span class="step-number">5</span>
+              <div class="step-content">
+                <h4>Gmail Node</h4>
+                <p>Send the joke or fact with the countdown included. Make it festive!</p>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+
+        <!-- Resources -->
+        <div class="sidebar-card resources-card">
+          <h3 class="sidebar-card-title">
+            <span>📎</span>
+            Resources
+          </h3>
+          <a href="#" class="resource-link">
+            <span>📧</span>
+            <span>Email Template (HTML/CSS)</span>
+          </a>
+          <a href="#" class="resource-link">
+            <span>📊</span>
+            <span>Sample Spreadsheet</span>
+          </a>
+        </div>
+
+        <!-- Share With -->
+        <div class="sidebar-card">
+          <h3 class="sidebar-card-title">
+            <span>💝</span>
+            Share With
+          </h3>
+          <div class="share-item">
+            <span>📧</span>
+            <span>Forward to family</span>
+          </div>
+          <div class="share-item">
+            <span>📱</span>
+            <span>Post favorites on social media</span>
+          </div>
+        </div>
+
+        <!-- Business Skills -->
+        <div class="sidebar-card">
+          <h3 class="sidebar-card-title">
+            <span>💼</span>
+            Skills You'll Learn
+          </h3>
+          <div class="skills-list">
+            <span class="skill-tag">Database Reads</span>
+            <span class="skill-tag">Data Filtering</span>
+            <span class="skill-tag">Date-based Content</span>
+            <span class="skill-tag">Drip Campaigns</span>
+            <span class="skill-tag">Google Sheets API</span>
+          </div>
+        </div>
+
+        <!-- Bonus Ideas -->
+        <div class="sidebar-card bonus-card">
+          <h3 class="sidebar-card-title">
+            <span>✨</span>
+            Bonus Ideas
+          </h3>
+          <ul class="bonus-list">
+            <li>
+              <strong>Daily holiday recipes</strong>
+              <span class="bonus-description">Build a meal plan countdown</span>
+            </li>
+            <li>
+              <strong>Gratitude prompts</strong>
+              <span class="bonus-description">Great for team culture building</span>
+            </li>
+            <li>
+              <strong>Daily sales tips</strong>
+              <span class="bonus-description">Perfect during a product launch</span>
+            </li>
+            <li>
+              <strong>Rotating testimonials</strong>
+              <span class="bonus-description">Send to leads in a nurture sequence</span>
+            </li>
+          </ul>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2 class="cta-title">Continue your automation journey</h2>
+    <p class="cta-text">More festive projects coming soon!</p>
+    <div class="cta-buttons">
+      <a href="countdown-bot.html" class="btn btn-secondary">
+        <span>←</span>
+        <span>Previous: Countdown Bot</span>
+      </a>
+      <a href="index.html#automations" class="btn btn-primary">
+        <span>View All Walkthroughs</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-text">
+      🎄 <a href="index.html">Holiday Automation Walkthroughs</a> — Learn n8n through festive projects
+    </p>
+  </footer>
+
+  <script>
+    // Generate twinkling stars
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      star.style.animationDuration = (2 + Math.random() * 2) + 's';
+      starsContainer.appendChild(star);
+    }
+  </script>
+
+</body>
+</html>

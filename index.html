@@ -949,7 +949,7 @@
       <div class="automations-grid">
 
         <!-- ========== AUTOMATION 1 ========== -->
-        <article class="automation-card">
+        <article class="automation-card" onclick="window.location.href='countdown-bot.html'" style="cursor: pointer;">
           <div class="card-header">
             <div class="card-number">1</div>
             <div class="card-title-group">
@@ -990,16 +990,16 @@
             </div>
 
             <div class="card-action">
-              <button class="card-btn card-btn-video" onclick="openVideoModal('Holiday Countdown Bot', 'VIDEO_ID_1')">
+              <a href="countdown-bot.html" class="card-btn card-btn-video" onclick="event.stopPropagation()">
                 <span>▶</span>
-                <span>Watch Tutorial</span>
-              </button>
+                <span>View Walkthrough</span>
+              </a>
             </div>
           </div>
         </article>
 
         <!-- ========== AUTOMATION 2 ========== -->
-        <article class="automation-card">
+        <article class="automation-card" onclick="window.location.href='joke-bot.html'" style="cursor: pointer;">
           <div class="card-header">
             <div class="card-number">2</div>
             <div class="card-title-group">
@@ -1044,11 +1044,11 @@
             </div>
 
             <div class="card-action">
-              <button class="card-btn card-btn-video" onclick="openVideoModal('Holiday Joke & Fact Bot', 'VIDEO_ID_2')">
+              <a href="joke-bot.html" class="card-btn card-btn-video" onclick="event.stopPropagation()">
                 <span>▶</span>
-                <span>Watch Tutorial</span>
-              </button>
-              <a href="#" class="card-btn card-btn-resources">
+                <span>View Walkthrough</span>
+              </a>
+              <a href="joke-bot.html#resources" class="card-btn card-btn-resources" onclick="event.stopPropagation()">
                 <span>📎</span>
                 <span>Resources</span>
               </a>
@@ -1159,7 +1159,7 @@
       <a href="#" class="footer-link">Contact</a>
     </div>
     <p class="copyright">
-      © 2024 Holiday Automation Walkthroughs. Made with ❤️ and ☕
+      © 2025 Holiday Automation Walkthroughs. Made with ❤️ and ☕
     </p>
   </footer>
 
