@@ -1,10 +1,11 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind()],
-  output: 'static',
-  site: 'https://scottdalessandro.github.io',
-  base: '/holiday-automations',
+  output: 'hybrid',
+  adapter: vercel(),
+  site: 'https://holidayautomations.com',
 });

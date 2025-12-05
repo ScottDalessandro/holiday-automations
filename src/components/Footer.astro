@@ -44,11 +44,73 @@ const currentYear = new Date().getFullYear();
             <div class="flex flex-col items-start w-full md:w-auto">
                 <label class="text-slate-400 text-sm mb-1">&#128236; Stay in the loop</label>
                 <p class="text-slate-500 text-xs mb-3">Get notified when new tutorials drop.</p>
-                <form class="flex gap-2 w-full md:w-auto">
-                    <input type="email" placeholder="email@example.com" class="bg-slate-900/50 border border-slate-800 rounded-lg px-4 py-2.5 w-full md:w-64 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-rose-500/50 transition-colors">
-                    <button type="submit" class="bg-rose-500 hover:bg-rose-600 text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-all whitespace-nowrap">Subscribe</button>
-                </form>
+                <div id="beehiiv-custom-form" class="flex gap-2 w-full md:w-auto">
+                    <input type="email" id="beehiiv-email" required placeholder="email@example.com" class="bg-slate-900/50 border border-slate-800 rounded-lg px-4 py-2.5 w-full md:w-64 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-rose-500/50 transition-colors">
+                    <button type="button" id="beehiiv-submit" class="bg-rose-500 hover:bg-rose-600 disabled:bg-rose-800 disabled:cursor-not-allowed text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-all whitespace-nowrap">Subscribe</button>
+                </div>
+                <p id="beehiiv-message" class="text-xs mt-2 hidden"></p>
             </div>
+
+            <script>
+            (function() {
+                const BEEHIIV_FORM_URL = 'https://subscribe-forms.beehiiv.com/15d30fe6-71c2-4133-875f-5f2f38f9a697';
+
+                document.getElementById('beehiiv-submit').addEventListener('click', async function() {
+                    const emailInput = document.getElementById('beehiiv-email');
+                    const button = this;
+                    const message = document.getElementById('beehiiv-message');
+                    const email = emailInput.value.trim();
+
+                    if (!email || !emailInput.checkValidity()) {
+                        emailInput.reportValidity();
+                        return;
+                    }
+
+                    button.textContent = 'Subscribing...';
+                    button.disabled = true;
+                    message.className = 'text-xs mt-2 hidden';
+
+                    try {
+                        const response = await fetch('/api/subscribe', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            message.textContent = 'You\'re subscribed! Check your inbox.';
+                            message.className = 'text-xs mt-2 text-emerald-400';
+                            emailInput.value = '';
+                        } else if (data.fallback) {
+                            // API not configured, use Beehiiv form directly
+                            window.open(BEEHIIV_FORM_URL, '_blank', 'width=500,height=400');
+                            message.textContent = 'Complete signup in the popup window.';
+                            message.className = 'text-xs mt-2 text-amber-400';
+                        } else {
+                            throw new Error(data.error || 'Subscription failed');
+                        }
+                    } catch (error) {
+                        // Fallback: open Beehiiv form directly
+                        window.open(BEEHIIV_FORM_URL, '_blank', 'width=500,height=400');
+                        message.textContent = 'Complete signup in the popup window.';
+                        message.className = 'text-xs mt-2 text-amber-400';
+                    }
+
+                    button.textContent = 'Subscribe';
+                    button.disabled = false;
+                });
+
+                // Allow Enter key to submit
+                document.getElementById('beehiiv-email').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        document.getElementById('beehiiv-submit').click();
+                    }
+                });
+            })();
+            </script>
 
             <!-- Vertical Divider (Center - Desktop only) -->
             <div class="hidden md:block w-px h-12 bg-slate-800"></div>
