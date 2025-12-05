@@ -1,0 +1,121 @@
+---
+// Interactive string lights navigation component
+interface NavBulb {
+    color: string;
+    bg: string;
+    label: string;
+    link: string;
+    external?: boolean;
+}
+
+const navBulbs: NavBulb[] = [
+    { color: 'text-rose-500', bg: 'bg-rose-500', label: 'Intro Video', link: '#about' },
+    { color: 'text-emerald-500', bg: 'bg-emerald-500', label: 'Tutorials', link: '#tutorials' },
+    { color: 'text-amber-400', bg: 'bg-amber-400', label: 'About', link: '#about' },
+    { color: 'text-sky-400', bg: 'bg-sky-400', label: 'Resources', link: 'https://docs.n8n.io', external: true }
+];
+---
+
+<!-- String Lights Navigation (Sticky Top) -->
+<div class="fixed top-0 left-0 w-full z-50 flex justify-center h-20 pointer-events-none">
+    <!-- Wrapper for swaying animation -->
+    <div id="lights-wrapper" class="lights-wrapper relative w-[120%] min-w-[800px] max-w-4xl h-full">
+        <!-- Wire -->
+        <svg class="absolute top-[-20px] left-0 w-full h-24 stroke-slate-600 fill-none opacity-90 drop-shadow-sm" viewBox="0 0 100 25" preserveAspectRatio="none">
+            <path d="M0,0 Q50,35 100,0" stroke-width="0.4"></path>
+        </svg>
+
+        <!-- Bulbs Container -->
+        <div id="lights-container" class="absolute top-0 left-0 w-full h-full flex justify-between px-20 pt-1 pointer-events-auto">
+            {navBulbs.map((config, i) => {
+                const center = 1.5;
+                const dist = Math.abs(i - center);
+                const offset = (dist * dist) * 1.2 + 0.5;
+                return (
+                    <div
+                        class="flex flex-col items-center bulb-interactive group relative"
+                        style={`transform: translateY(${offset * 8}px)`}
+                        data-link={config.link}
+                        data-external={config.external || false}
+                        data-color={config.bg}
+                    >
+                        <!-- Wire connector -->
+                        <div class="w-0.5 h-3 md:h-5 bg-slate-700 group-hover:bg-slate-500 transition-colors"></div>
+
+                        <!-- Bulb Glass -->
+                        <div
+                            class={`bulb-glass w-4 h-4 md:w-5 md:h-5 rounded-full ${config.bg} shadow-[0_0_10px_2px_currentColor] ${config.color} transition-all duration-300`}
+                            style={`animation: light-turn-on 0.5s ease-out forwards ${i * 0.2 + 0.5}s`}
+                        ></div>
+
+                        <!-- Tooltip -->
+                        <div class="bulb-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-700 text-white text-[10px] font-medium px-3 py-1.5 rounded-lg shadow-xl opacity-0 transition-all duration-300 pointer-events-none whitespace-nowrap z-50">
+                            <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 border-t border-l border-slate-700 rotate-45"></div>
+                            {config.label}
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    </div>
+</div>
+
+<script>
+const lightsWrapper = document.getElementById('lights-wrapper');
+const bulbs = document.querySelectorAll('.bulb-interactive');
+
+bulbs.forEach((bulbWrapper) => {
+    const link = bulbWrapper.getAttribute('data-link');
+    const external = bulbWrapper.getAttribute('data-external') === 'true';
+    const colorClass = bulbWrapper.getAttribute('data-color');
+    const bulb = bulbWrapper.querySelector('.bulb-glass');
+
+    // Hover: Sway Wire
+    bulbWrapper.addEventListener('mouseenter', () => {
+        lightsWrapper?.classList.add('swaying');
+    });
+    bulbWrapper.addEventListener('mouseleave', () => {
+        lightsWrapper?.classList.remove('swaying');
+    });
+
+    // Click: Navigate & Clink Effect
+    bulbWrapper.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Clink Sparkle Effect
+        if (bulb) {
+            const rect = bulb.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let p = 0; p < 6; p++) {
+                const spark = document.createElement('div');
+                spark.className = `fixed w-1 h-1 rounded-full ${colorClass} z-[60] pointer-events-none`;
+                spark.style.left = `${centerX}px`;
+                spark.style.top = `${centerY}px`;
+                document.body.appendChild(spark);
+
+                const angle = (Math.PI * 2 / 6) * p;
+                const velocity = 20 + Math.random() * 10;
+
+                const anim = spark.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: '1' },
+                    { transform: `translate(${Math.cos(angle) * velocity}px, ${Math.sin(angle) * velocity}px) scale(0)`, opacity: '0' }
+                ], { duration: 400, easing: 'ease-out' });
+
+                anim.onfinish = () => spark.remove();
+            }
+        }
+
+        // Navigation
+        if (external && link) {
+            setTimeout(() => window.open(link, '_blank'), 150);
+        } else if (link) {
+            const target = document.querySelector(link);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+});
+</script>

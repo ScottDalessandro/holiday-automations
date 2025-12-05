@@ -1,0 +1,60 @@
+---
+interface WorkflowNode {
+  icon: string;
+  label: string;
+  color?: 'emerald' | 'rose' | 'slate' | 'amber' | 'sky' | 'violet';
+}
+
+interface Props {
+  nodes: WorkflowNode[];
+  description?: string;
+}
+
+const { nodes, description } = Astro.props;
+
+const colorClasses = {
+  emerald: 'bg-emerald-600 text-white shadow-emerald-900/50 border-emerald-500/50',
+  rose: 'bg-rose-600 text-white shadow-rose-900/50 border-rose-500/50',
+  slate: 'bg-slate-800 text-slate-200 border-slate-700',
+  amber: 'bg-amber-600 text-white shadow-amber-900/50 border-amber-500/50',
+  sky: 'bg-sky-600 text-white shadow-sky-900/50 border-sky-500/50',
+  violet: 'bg-violet-600 text-white shadow-violet-900/50 border-violet-500/50',
+};
+---
+
+<div id="workflow-overview" class="fade-up bg-slate-900/70 border border-slate-800 rounded-2xl p-8 backdrop-blur-sm scroll-mt-28">
+    <div class="flex items-center gap-3 mb-6">
+        <span class="text-2xl">&#9889;</span>
+        <h2 class="text-xl font-bold text-white tracking-tight">Workflow Overview</h2>
+    </div>
+
+    <!-- Diagram -->
+    <div class="bg-slate-950/80 rounded-xl p-6 border border-slate-800/50 overflow-x-auto">
+        <div class="flex items-center min-w-[500px] justify-between gap-2 relative py-4">
+            <!-- Dashed Connecting Line Background -->
+            <div class="absolute top-1/2 left-4 right-4 h-px -translate-y-1/2 z-0">
+                <svg class="w-full h-2 stroke-slate-700" overflow="visible">
+                    <line x1="0" y1="1" x2="100%" y2="1" stroke-width="2" stroke-dasharray="6 6"></line>
+                </svg>
+            </div>
+
+            <!-- Nodes -->
+            {nodes.map((node, index) => (
+                <>
+                    <div class="relative z-10 flex flex-col items-center gap-2">
+                        <div class={`font-semibold rounded-lg px-4 py-2 flex items-center gap-2 shadow-lg text-sm border ${colorClasses[node.color || 'slate']}`}>
+                            <iconify-icon icon={node.icon} width="16"></iconify-icon> {node.label}
+                        </div>
+                    </div>
+                    {index < nodes.length - 1 && (
+                        <iconify-icon icon="lucide:arrow-right" class="text-amber-400 relative z-10 text-lg"></iconify-icon>
+                    )}
+                </>
+            ))}
+        </div>
+    </div>
+
+    {description && (
+        <p class="mt-6 text-slate-400 leading-relaxed text-sm">{description}</p>
+    )}
+</div>

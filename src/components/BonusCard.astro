@@ -1,0 +1,30 @@
+---
+interface BonusIdea {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  ideas: BonusIdea[];
+}
+
+const { ideas } = Astro.props;
+---
+
+<div class="fade-up bg-gradient-to-br from-amber-500/10 to-rose-500/5 border border-dashed border-amber-500/40 rounded-2xl p-6">
+    <div class="flex items-center gap-2 mb-4">
+        <span class="text-xl">&#10024;</span>
+        <h3 class="font-bold text-amber-400">Bonus Ideas</h3>
+    </div>
+    <ul class="space-y-4">
+        {ideas.map((idea) => (
+            <li class="flex items-start gap-3">
+                <span class="text-lg mt-0.5">&#127873;</span>
+                <div>
+                    <p class="text-slate-300 text-sm font-medium">{idea.title}</p>
+                    <p class="text-slate-500 text-xs mt-0.5">{idea.description}</p>
+                </div>
+            </li>
+        ))}
+    </ul>
+</div>

@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Background from '../components/Background.astro';
+import StringLights from '../components/StringLights.astro';
+import Hero from '../components/Hero.astro';
+import Divider from '../components/Divider.astro';
+import VideoSection from '../components/VideoSection.astro';
+import Workshop from '../components/Workshop.astro';
+import Tutorials from '../components/Tutorials.astro';
+import TutorialCard from '../components/TutorialCard.astro';
+import Footer from '../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL;
+
+// Fetch tutorials from content collection
+const lessons = await getCollection('lessons');
+const tutorials = lessons
+    .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
+    .map((lesson) => ({
+        number: lesson.data.tutorialNumber,
+        emoji: lesson.data.icon,
+        title: lesson.data.title,
+        description: lesson.data.description ?? '',
+        difficulty: lesson.data.difficulty ?? 'beginner',
+        workflowNodes: lesson.data.workflowNodes ?? [],
+        shareWith: lesson.data.shareWith ?? '',
+        businessSkill: lesson.data.businessSkill ?? '',
+        bonusIdeas: lesson.data.bonusIdeas ?? [],
+        href: `${base}${lesson.slug}`
+    }));
+---
+
+<Layout title="Holiday Automations | n8n Tutorials">
+    <!-- Atmospheric Backgrounds -->
+    <Background />
+
+    <!-- String Lights Navigation -->
+    <StringLights />
+
+    <!-- Main Content -->
+    <main class="relative z-10 flex flex-col items-center">
+        <!-- Hero Section -->
+        <Hero />
+
+        <!-- Divider -->
+        <Divider icon="tree" color="rose" />
+
+        <!-- About / Video Section -->
+        <VideoSection />
+
+        <!-- Workshop Section -->
+        <Workshop />
+
+        <!-- Divider -->
+        <Divider icon="snowflake" color="blue" />
+
+        <!-- Tutorials Section -->
+        <Tutorials>
+            {tutorials.map((tutorial) => (
+                <TutorialCard {...tutorial} />
+            ))}
+        </Tutorials>
+
+        <!-- Footer -->
+        <Footer />
+    </main>
+</Layout>

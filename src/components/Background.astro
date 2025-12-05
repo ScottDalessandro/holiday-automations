@@ -1,0 +1,82 @@
+---
+// Atmospheric background with stars, snow, and gradient glows
+---
+
+<!-- Atmospheric Backgrounds -->
+<div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <!-- Grid -->
+    <div class="absolute inset-0 bg-grid opacity-100"></div>
+
+    <!-- Gradient Glows -->
+    <div class="absolute top-0 left-0 w-[40%] h-[40%] bg-rose-500/10 blur-[120px] rounded-full mix-blend-screen"></div>
+    <div class="absolute bottom-0 right-0 w-[40%] h-[40%] bg-emerald-500/10 blur-[120px] rounded-full mix-blend-screen"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30%] h-[30%] bg-amber-500/5 blur-[100px] rounded-full"></div>
+
+    <!-- Stars Container (Populated by JS) -->
+    <div id="star-container" class="absolute inset-0"></div>
+
+    <!-- Snow Layers (Populated by JS) -->
+    <div id="snow-container" class="absolute inset-0"></div>
+</div>
+
+<script>
+// Generate Stars
+const starContainer = document.getElementById('star-container');
+if (starContainer) {
+    for (let i = 0; i < 50; i++) {
+        const star = document.createElement('div');
+        star.className = 'absolute bg-white rounded-full';
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.opacity = String(Math.random() * 0.7 + 0.3);
+        star.style.animation = `twinkle ${Math.random() * 3 + 2}s ease-in-out infinite ${Math.random() * 5}s`;
+        starContainer.appendChild(star);
+    }
+}
+
+// Generate Snow
+const snowContainer = document.getElementById('snow-container');
+const createSnow = (count: number, layerClass: string) => {
+    if (!snowContainer) return;
+    for (let i = 0; i < count; i++) {
+        const flake = document.createElement('div');
+        flake.className = `absolute bg-white rounded-full opacity-60 ${layerClass}`;
+        const size = layerClass === 'snow-layer-1' ? 2 : 4;
+        flake.style.width = `${size}px`;
+        flake.style.height = `${size}px`;
+        flake.style.left = `${Math.random() * 100}%`;
+        flake.style.top = `-${Math.random() * 20}%`;
+        flake.style.animationDelay = `${Math.random() * 15}s`;
+        flake.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        snowContainer.appendChild(flake);
+    }
+};
+createSnow(30, 'snow-layer-1');
+createSnow(15, 'snow-layer-2');
+
+// Cursor Sparkles
+document.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.8) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'cursor-sparkle w-1 h-1 bg-amber-200 rounded-full shadow-[0_0_4px_#fcd34d] z-50';
+        sparkle.style.left = `${e.clientX}px`;
+        sparkle.style.top = `${e.clientY}px`;
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 800);
+    }
+});
+
+// Scroll Fade Up Observer
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>

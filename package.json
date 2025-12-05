@@ -1,0 +1,28 @@
+{
+  "name": "holiday-automations",
+  "version": "1.0.0",
+  "description": "Festive n8n tutorial site",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScottDalessandro/holiday-automations.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ScottDalessandro/holiday-automations/issues"
+  },
+  "homepage": "https://github.com/ScottDalessandro/holiday-automations#readme",
+  "dependencies": {
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.16.4",
+    "tailwindcss": "^3.4.18"
+  }
+}

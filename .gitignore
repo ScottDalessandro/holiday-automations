@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Astro
+.astro/
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Playwright MCP
+.playwright-mcp/
+
+# Temporary/example files
+homepage-example.html
+lesson-example-aura.html
+holiday-joke-bot.txt
+TUTORIAL_SKILL.md

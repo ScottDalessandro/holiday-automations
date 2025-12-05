@@ -1,0 +1,54 @@
+---
+interface Props {
+  videoUrl?: string;
+}
+
+const { videoUrl } = Astro.props;
+---
+
+<section class="w-full max-w-4xl mx-auto px-6 mb-16 fade-up">
+    <div class="relative w-full aspect-video bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl shadow-rose-500/5 group cursor-pointer" data-video-url={videoUrl}>
+        <!-- Placeholder for Video -->
+        <div class="video-placeholder absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-10">
+            <div class="w-20 h-20 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-rose-600 group-hover:border-rose-500 transition-all duration-300 shadow-xl">
+                <iconify-icon icon="lucide:play" width="32" class="ml-1"></iconify-icon>
+            </div>
+            <span class="mt-4 text-slate-500 text-sm font-medium tracking-wide">Watch the Walkthrough</span>
+        </div>
+        <!-- Video iframe (hidden until clicked) -->
+        <iframe
+            class="video-iframe absolute inset-0 w-full h-full hidden"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+        ></iframe>
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/50 to-transparent pointer-events-none"></div>
+    </div>
+</section>
+
+<script>
+document.querySelectorAll('[data-video-url]').forEach((container) => {
+    const videoUrl = container.getAttribute('data-video-url');
+    const placeholder = container.querySelector('.video-placeholder');
+    const iframe = container.querySelector('.video-iframe') as HTMLIFrameElement;
+
+    if (!videoUrl || !placeholder || !iframe) return;
+
+    placeholder.addEventListener('click', () => {
+        // Convert YouTube URL to embed URL
+        let embedUrl = videoUrl;
+        if (videoUrl.includes('youtube.com/watch')) {
+            const videoId = new URL(videoUrl).searchParams.get('v');
+            embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        } else if (videoUrl.includes('youtu.be/')) {
+            const videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        }
+
+        iframe.src = embedUrl;
+        iframe.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+    });
+});
+</script>

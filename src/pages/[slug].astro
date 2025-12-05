@@ -1,0 +1,39 @@
+---
+import LessonLayout from '../layouts/LessonLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const lessons = await getCollection('lessons');
+  return lessons.map((lesson) => ({
+    params: { slug: lesson.slug },
+    props: { lesson },
+  }));
+}
+
+const { lesson } = Astro.props;
+const { Content } = await lesson.render();
+const data = lesson.data;
+
+// Support both videoId (YouTube ID) and videoUrl (full URL)
+const videoUrl = data.videoUrl || (data.videoId ? `https://youtu.be/${data.videoId}` : undefined);
+---
+
+<LessonLayout
+  title={data.title}
+  description={data.description}
+  icon={data.icon}
+  tutorialNumber={data.tutorialNumber}
+  videoUrl={videoUrl}
+  workflowDescription={data.workflowDescription}
+  workflowNodes={data.workflowNodes}
+  steps={data.steps}
+  codeBlocks={data.codeBlocks}
+  concepts={data.concepts}
+  resources={data.resources}
+  skills={data.skills}
+  bonusIdeas={data.bonusIdeas}
+  nextLesson={data.nextLesson}
+  workflowJson={data.workflowJson}
+>
+  <Content />
+</LessonLayout>

@@ -1,0 +1,136 @@
+---
+// Hero section component
+---
+
+<!-- Hero Section -->
+<section class="w-full max-w-4xl mx-auto pt-32 pb-20 px-6 text-center flex flex-col items-center relative">
+
+    <!-- Badge -->
+    <div class="fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold tracking-wide mb-8 animate-pulse shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]">
+        <span>🎄</span> NEW 2024 WORKFLOWS
+    </div>
+
+    <!-- Heading -->
+    <h1 class="fade-up text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tighter leading-[1.1] mb-6">
+        <span class="bg-gradient-to-r from-rose-400 via-amber-400 to-emerald-400 bg-clip-text text-transparent block animate-gradient-x pb-2">Holiday Automation</span>
+        <span class="text-white drop-shadow-lg">Walkthroughs</span>
+    </h1>
+
+    <!-- Subheading -->
+    <p class="fade-up text-lg text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed font-light">
+        Connect your festive apps, automate gift tracking, and schedule holiday greetings with cozy, step-by-step n8n blueprints.
+    </p>
+
+    <!-- Buttons -->
+    <div class="fade-up flex flex-col sm:flex-row gap-4 mb-16 z-20">
+        <button id="start-btn" class="relative overflow-hidden bg-rose-600 hover:bg-rose-500 text-white px-8 py-3.5 rounded-full font-medium transition-all shadow-lg shadow-rose-900/20 flex items-center gap-2 justify-center group active:scale-95">
+            Start Building
+            <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform" stroke-width="2"></iconify-icon>
+        </button>
+        <button class="bg-transparent border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white px-8 py-3.5 rounded-full font-medium transition-all flex items-center gap-2 justify-center hover:bg-white/5">
+            <iconify-icon icon="lucide:play-circle" stroke-width="2"></iconify-icon>
+            Watch Intro
+        </button>
+    </div>
+
+    <!-- Mini Workflow Preview Card -->
+    <div class="fade-up w-full max-w-md mx-auto bg-slate-900/80 border border-slate-800 rounded-xl p-6 backdrop-blur-md shadow-2xl relative group hover:border-slate-600 transition-colors duration-500">
+        <div class="flex items-center justify-between px-4">
+            <!-- Trigger Node -->
+            <div class="flex flex-col items-center gap-2 z-10">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/20 shadow-[0_0_15px_-3px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform duration-300">
+                    <iconify-icon icon="lucide:calendar-clock" width="24" stroke-width="1.5"></iconify-icon>
+                </div>
+            </div>
+
+            <!-- Connector 1 -->
+            <div class="flex-1 mx-2 h-10 flex items-center justify-center relative">
+                <svg class="w-full h-2 stroke-slate-600" overflow="visible">
+                    <line x1="0" y1="1" x2="100%" y2="1" stroke-width="2" class="flow-line"></line>
+                </svg>
+                <iconify-icon icon="lucide:gift" class="absolute text-amber-400 text-xs bg-slate-900 p-1 rounded-full border border-slate-700" width="12"></iconify-icon>
+            </div>
+
+            <!-- Action Node -->
+            <div class="flex flex-col items-center gap-2 z-10">
+                <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/20 shadow-[0_0_15px_-3px_rgba(244,63,94,0.3)] group-hover:scale-110 transition-transform duration-300 delay-100">
+                    <iconify-icon icon="lucide:wand-2" width="24" stroke-width="1.5"></iconify-icon>
+                </div>
+            </div>
+
+            <!-- Connector 2 -->
+            <div class="flex-1 mx-2 h-10 flex items-center justify-center relative">
+                <svg class="w-full h-2 stroke-slate-600" overflow="visible">
+                    <line x1="0" y1="1" x2="100%" y2="1" stroke-width="2" class="flow-line"></line>
+                </svg>
+            </div>
+
+            <!-- Result Node -->
+            <div class="flex flex-col items-center gap-2 z-10">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/20 shadow-[0_0_15px_-3px_rgba(251,191,36,0.3)] group-hover:scale-110 transition-transform duration-300 delay-200">
+                    <iconify-icon icon="lucide:mail-check" width="24" stroke-width="1.5"></iconify-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Countdown -->
+    <div class="fade-up mt-6 flex items-center gap-2 text-amber-400 bg-amber-500/5 px-4 py-2 rounded-full border border-amber-500/20">
+        <span class="animate-pulse">🎄</span>
+        <span id="countdown" class="font-mono text-sm font-semibold tracking-tight">Loading cheer...</span>
+    </div>
+
+</section>
+
+<script>
+// Countdown Timer
+const countdownEl = document.getElementById('countdown');
+const updateCountdown = () => {
+    if (!countdownEl) return;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const xmas = new Date(currentYear, 11, 25);
+    if (now.getMonth() === 11 && now.getDate() > 25) {
+        xmas.setFullYear(currentYear + 1);
+    }
+    const diff = xmas.getTime() - now.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    countdownEl.textContent = `${days}d ${hours}h until Christmas`;
+};
+updateCountdown();
+setInterval(updateCountdown, 1000 * 60);
+
+// Confetti Button
+const btn = document.getElementById('start-btn');
+const colors = ['bg-rose-500', 'bg-emerald-500', 'bg-amber-400', 'bg-sky-400'];
+
+btn?.addEventListener('click', (e) => {
+    const rect = btn.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.className = `fixed w-2 h-2 rounded-sm ${color} z-50 pointer-events-none`;
+        particle.style.left = `${centerX}px`;
+        particle.style.top = `${centerY}px`;
+
+        document.body.appendChild(particle);
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 100 + 50;
+
+        const anim = particle.animate([
+            { transform: 'translate(0,0) rotate(0deg)', opacity: '1' },
+            { transform: `translate(${Math.cos(angle) * velocity}px, ${Math.sin(angle) * velocity}px) rotate(${Math.random() * 360}deg)`, opacity: '0' }
+        ], {
+            duration: 800,
+            easing: 'ease-out'
+        });
+
+        anim.onfinish = () => particle.remove();
+    }
+});
+</script>

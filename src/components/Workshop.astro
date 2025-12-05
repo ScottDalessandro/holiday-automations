@@ -1,0 +1,87 @@
+---
+// Workshop section with ornament cards
+interface WorkshopCard {
+    icon: string;
+    title: string;
+    description: string;
+    color: 'emerald' | 'rose' | 'amber';
+    delay?: string;
+}
+
+const cards: WorkshopCard[] = [
+    {
+        icon: 'lucide:target',
+        title: 'Real Skills',
+        description: "Don't just copy paste. Learn the logic behind loops, conditional filtering, and API integrations.",
+        color: 'emerald'
+    },
+    {
+        icon: 'lucide:gift',
+        title: 'Shareable Results',
+        description: 'Build automations that actually produce something visible—emails or lists—that you can share.',
+        color: 'rose',
+        delay: '-1s'
+    },
+    {
+        icon: 'lucide:video',
+        title: 'Video Walkthroughs',
+        description: 'Follow along with step-by-step video guides that explain exactly why we connect each node.',
+        color: 'amber',
+        delay: '-2s'
+    }
+];
+
+const colorClasses = {
+    emerald: {
+        ornament: 'bg-emerald-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.5)] text-emerald-950',
+        hover: 'hover:border-emerald-500/30',
+        text: 'group-hover:text-emerald-400'
+    },
+    rose: {
+        ornament: 'bg-rose-500 shadow-[0_0_15px_-3px_rgba(244,63,94,0.5)] text-rose-950',
+        hover: 'hover:border-rose-500/30',
+        text: 'group-hover:text-rose-400'
+    },
+    amber: {
+        ornament: 'bg-amber-400 shadow-[0_0_15px_-3px_rgba(251,191,36,0.5)] text-amber-950',
+        hover: 'hover:border-amber-500/30',
+        text: 'group-hover:text-amber-400'
+    }
+};
+---
+
+<!-- Workshop Section (Cards with swinging ornaments) -->
+<section class="w-full max-w-6xl mx-auto px-6 py-12 relative">
+    <div class="text-center mb-16 fade-up">
+        <h2 class="text-rose-400 text-xs font-bold tracking-widest uppercase mb-3">The Workshop</h2>
+        <h3 class="text-3xl md:text-4xl text-white font-semibold tracking-tight">Learn by Building Something Fun</h3>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
+        {cards.map((card, index) => {
+            const colors = colorClasses[card.color];
+            return (
+                <div
+                    class={`fade-up group bg-slate-900/60 border border-slate-800 rounded-2xl p-6 text-center ${colors.hover} transition-all duration-300 relative`}
+                    style={index > 0 ? `transition-delay: ${index * 100}ms` : ''}
+                >
+                    <!-- Swinging Ornament -->
+                    <div
+                        class="absolute -top-12 left-1/2 -translate-x-1/2 z-20 ornament pointer-events-none"
+                        style={card.delay ? `animation-delay: ${card.delay}` : ''}
+                    >
+                        <div class="w-px h-12 bg-slate-600 mx-auto"></div>
+                        <div class={`w-8 h-8 rounded-full ${colors.ornament} flex items-center justify-center`}>
+                            <iconify-icon icon={card.icon} width="16"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <h4 class={`text-white text-lg font-semibold mb-2 mt-4 ${colors.text} transition-colors`}>{card.title}</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        {card.description}
+                    </p>
+                </div>
+            );
+        })}
+    </div>
+</section>

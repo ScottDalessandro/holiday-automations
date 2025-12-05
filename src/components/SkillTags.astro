@@ -1,0 +1,14 @@
+---
+// Skill tags component
+interface Props {
+  skills: string[];
+}
+
+const { skills } = Astro.props;
+---
+
+<div class="skill-tags">
+  {skills.map((skill) => (
+    <span class="skill-tag">{skill}</span>
+  ))}
+</div>

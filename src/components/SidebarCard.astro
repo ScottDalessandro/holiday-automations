@@ -1,0 +1,78 @@
+---
+interface Props {
+  variant: 'workflow' | 'resources' | 'skills';
+  title?: string;
+  icon?: string;
+  workflowJson?: string;
+  resources?: { icon: string; label: string; url: string }[];
+  skills?: string[];
+}
+
+const { variant, title, icon, workflowJson, resources, skills } = Astro.props;
+---
+
+{variant === 'workflow' && (
+    <div class="fade-up bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 border border-emerald-500/30 rounded-2xl p-6 shadow-2xl shadow-emerald-900/20">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl">&#11015;&#65039;</span>
+            <h3 class="font-bold text-white">Get the Workflow</h3>
+        </div>
+        <p class="text-slate-400 text-sm mb-6">Import directly into your n8n instance to get started immediately.</p>
+        <button
+            class="copy-workflow-btn w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl py-3 px-6 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-emerald-900/30 group"
+            data-workflow={workflowJson}
+        >
+            <iconify-icon icon="lucide:clipboard-copy" width="18"></iconify-icon>
+            Copy Workflow JSON
+        </button>
+    </div>
+)}
+
+{variant === 'resources' && resources && (
+    <div id="resources" class="fade-up bg-gradient-to-br from-sky-500/10 to-sky-500/5 border border-sky-500/20 rounded-2xl p-6 scroll-mt-28">
+        <div class="flex items-center gap-2 mb-4">
+            <span class="text-xl">&#128206;</span>
+            <h3 class="font-bold text-white">Resources</h3>
+        </div>
+        <div class="space-y-3">
+            {resources.map((resource) => (
+                <a href={resource.url} target="_blank" rel="noopener noreferrer" class="block bg-slate-900/60 rounded-xl p-4 flex items-center gap-3 hover:bg-slate-800 hover:translate-x-1 transition-all border border-slate-800">
+                    <span class="text-lg">{resource.icon}</span>
+                    <span class="text-slate-300 text-sm font-medium">{resource.label}</span>
+                </a>
+            ))}
+        </div>
+    </div>
+)}
+
+{variant === 'skills' && skills && (
+    <div class="fade-up bg-slate-900/70 border border-slate-800 rounded-2xl p-6">
+        <div class="flex items-center gap-2 mb-4">
+            <span class="text-xl">&#128188;</span>
+            <h3 class="font-bold text-white">Skills You'll Learn</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            {skills.map((skill) => (
+                <span class="bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-medium rounded-full px-3 py-1 hover:bg-amber-400/20 transition-colors cursor-default">
+                    {skill}
+                </span>
+            ))}
+        </div>
+    </div>
+)}
+
+<script>
+document.querySelectorAll('.copy-workflow-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+        const workflow = btn.getAttribute('data-workflow');
+        if (workflow) {
+            await navigator.clipboard.writeText(workflow);
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<iconify-icon icon="lucide:check" width="18"></iconify-icon> Copied!';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+            }, 2000);
+        }
+    });
+});
+</script>

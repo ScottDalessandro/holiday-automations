@@ -1,0 +1,29 @@
+---
+// Decorative divider component
+interface Props {
+    icon?: 'tree' | 'snowflake';
+    color?: 'rose' | 'blue';
+}
+
+const { icon = 'tree', color = 'rose' } = Astro.props;
+
+const iconMap = {
+    tree: 'lucide:tree-pine',
+    snowflake: 'lucide:snowflake'
+};
+
+const colorMap = {
+    rose: 'text-rose-500 via-rose-500',
+    blue: 'text-blue-400 via-blue-400'
+};
+
+const iconClass = iconMap[icon];
+const colorClass = colorMap[color];
+const spinClass = icon === 'snowflake' ? 'animate-spin' : '';
+---
+
+<div class="w-full max-w-xs mx-auto flex items-center justify-center gap-4 opacity-30 my-8">
+    <div class={`h-px bg-gradient-to-r from-transparent ${colorClass} to-transparent w-full`}></div>
+    <iconify-icon icon={iconClass} class={`${colorClass.split(' ')[0]} ${spinClass}`} style={icon === 'snowflake' ? 'animation-duration: 10s' : ''}></iconify-icon>
+    <div class={`h-px bg-gradient-to-r from-transparent ${colorClass} to-transparent w-full`}></div>
+</div>
