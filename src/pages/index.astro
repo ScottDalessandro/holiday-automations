@@ -11,8 +11,6 @@ import Tutorials from '../components/Tutorials.astro';
 import TutorialCard from '../components/TutorialCard.astro';
 import Footer from '../components/Footer.astro';
 
-const base = import.meta.env.BASE_URL;
-
 // Fetch tutorials from content collection
 const lessons = await getCollection('lessons');
 const tutorials = lessons
@@ -27,7 +25,7 @@ const tutorials = lessons
         shareWith: lesson.data.shareWith ?? '',
         businessSkill: lesson.data.businessSkill ?? '',
         bonusIdeas: lesson.data.bonusIdeas ?? [],
-        href: `${base}/${lesson.slug}`
+        href: `/${lesson.slug}`
     }));
 ---
 
@@ -58,7 +56,7 @@ const tutorials = lessons
         <!-- Tutorials Section -->
         <Tutorials>
             <!-- Start Here Card -->
-            <a href={`${base}/getting-started`} class="fade-up flex flex-col h-full bg-transparent border-2 border-dashed border-amber-500/40 rounded-2xl p-8 hover:border-amber-500/60 hover:bg-amber-500/5 transition-all group">
+            <a href="/getting-started" class="fade-up flex flex-col h-full bg-transparent border-2 border-dashed border-amber-500/40 rounded-2xl p-8 hover:border-amber-500/60 hover:bg-amber-500/5 transition-all group">
                 <div class="text-4xl mb-4">🧭</div>
                 <span class="text-xs tracking-wide uppercase text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full mb-4 w-fit">RECOMMENDED FIRST</span>
                 <h4 class="text-2xl font-bold text-white mb-3">Getting Started Guide</h4>

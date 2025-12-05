@@ -7,7 +7,6 @@ interface Props {
 }
 
 const { nextLesson } = Astro.props;
-const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <section class="border-t border-slate-800 mt-24 py-16 text-center px-6">
@@ -15,7 +14,7 @@ const baseUrl = import.meta.env.BASE_URL;
         <>
             <h2 class="text-2xl font-bold text-white mb-2">Ready for the next automation?</h2>
             <p class="text-slate-400 mb-8 max-w-lg mx-auto">You've mastered this one. Now let's add some more skills to your toolkit.</p>
-            <a href={`${baseUrl}/${nextLesson.slug}`} class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-8 py-3.5 rounded-full font-semibold transition-all shadow-lg shadow-rose-900/20 hover:shadow-rose-900/40 active:scale-95 group">
+            <a href={`/${nextLesson.slug}`} class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-8 py-3.5 rounded-full font-semibold transition-all shadow-lg shadow-rose-900/20 hover:shadow-rose-900/40 active:scale-95 group">
                 Next: {nextLesson.title}
                 <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform" stroke-width="2"></iconify-icon>
             </a>
@@ -24,7 +23,7 @@ const baseUrl = import.meta.env.BASE_URL;
         <>
             <h2 class="text-2xl font-bold text-white mb-2">You've completed this walkthrough!</h2>
             <p class="text-slate-400 mb-8 max-w-lg mx-auto">Explore more holiday automations to level up your n8n skills.</p>
-            <a href={`${baseUrl}`} class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-8 py-3.5 rounded-full font-semibold transition-all shadow-lg shadow-rose-900/20 hover:shadow-rose-900/40 active:scale-95 group">
+            <a href="/" class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-8 py-3.5 rounded-full font-semibold transition-all shadow-lg shadow-rose-900/20 hover:shadow-rose-900/40 active:scale-95 group">
                 <iconify-icon icon="lucide:arrow-left" class="group-hover:-translate-x-1 transition-transform" stroke-width="2"></iconify-icon>
                 Back to All Walkthroughs
             </a>

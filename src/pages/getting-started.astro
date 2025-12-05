@@ -4,7 +4,6 @@ import Background from '../components/Background.astro';
 import StringLights from '../components/StringLights.astro';
 import Footer from '../components/Footer.astro';
 
-const base = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Getting Started | Holiday Automations">
@@ -132,7 +131,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 1: Video Walkthrough (Left) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
-                        <img src={`${base}/guide/video-section.png`} alt="Video walkthrough section" class="rounded-xl w-full" />
+                        <img src={`/guide/video-section.png`} alt="Video walkthrough section" class="rounded-xl w-full" />
                     </div>
                     <div>
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">1</div>
@@ -146,7 +145,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 2: Workflow Overview (Right) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all lg:order-2">
-                        <img src={`${base}/guide/workflow-overview.png`} alt="Workflow overview diagram" class="rounded-xl w-full" />
+                        <img src={`/guide/workflow-overview.png`} alt="Workflow overview diagram" class="rounded-xl w-full" />
                     </div>
                     <div class="lg:order-1">
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">2</div>
@@ -164,7 +163,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 3: Step-by-Step (Left) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
-                        <img src={`${base}/guide/step-by-step.png`} alt="Step-by-step guide" class="rounded-xl w-full" />
+                        <img src={`/guide/step-by-step.png`} alt="Step-by-step guide" class="rounded-xl w-full" />
                     </div>
                     <div>
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">3</div>
@@ -178,7 +177,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 4: The Code (Right) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all lg:order-2">
-                        <img src={`${base}/guide/code-block.png`} alt="Code blocks with copy buttons" class="rounded-xl w-full" />
+                        <img src={`/guide/code-block.png`} alt="Code blocks with copy buttons" class="rounded-xl w-full" />
                     </div>
                     <div class="lg:order-1">
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">4</div>
@@ -196,7 +195,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 5: Get Workflow (Left) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
-                        <img src={`${base}/guide/get-workflow.png`} alt="Get the workflow buttons" class="rounded-xl w-full" />
+                        <img src={`/guide/get-workflow.png`} alt="Get the workflow buttons" class="rounded-xl w-full" />
                     </div>
                     <div>
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">5</div>
@@ -210,7 +209,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 6: Key Concepts (Right) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all lg:order-2">
-                        <img src={`${base}/guide/key-concepts.png`} alt="Key concepts cards" class="rounded-xl w-full" />
+                        <img src={`/guide/key-concepts.png`} alt="Key concepts cards" class="rounded-xl w-full" />
                     </div>
                     <div class="lg:order-1">
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">6</div>
@@ -224,7 +223,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 7: Skills (Left) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
-                        <img src={`${base}/guide/skills.png`} alt="Skills tags" class="rounded-xl w-full" />
+                        <img src={`/guide/skills.png`} alt="Skills tags" class="rounded-xl w-full" />
                     </div>
                     <div>
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">7</div>
@@ -238,7 +237,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 8: Resources (Right) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all lg:order-2">
-                        <img src={`${base}/guide/resources.png`} alt="Resources links" class="rounded-xl w-full" />
+                        <img src={`/guide/resources.png`} alt="Resources links" class="rounded-xl w-full" />
                     </div>
                     <div class="lg:order-1">
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">8</div>
@@ -252,7 +251,7 @@ const base = import.meta.env.BASE_URL;
                 <!-- Card 9: Bonus Ideas (Left) -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-8 fade-up">
                     <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
-                        <img src={`${base}/guide/bonus-ideas.png`} alt="Bonus ideas" class="rounded-xl w-full" />
+                        <img src={`/guide/bonus-ideas.png`} alt="Bonus ideas" class="rounded-xl w-full" />
                     </div>
                     <div>
                         <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">9</div>
@@ -340,7 +339,7 @@ const base = import.meta.env.BASE_URL;
         <section class="w-full max-w-3xl mx-auto mt-16 mb-8 text-center fade-up">
             <h2 class="text-2xl font-bold text-white mb-3">Ready to build something?</h2>
             <p class="text-slate-400 mb-8 font-light">Pick a tutorial and let's go.</p>
-            <a href={`${base}/#tutorials`} class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-8 py-3.5 rounded-full font-medium transition-all shadow-lg shadow-rose-900/20 group">
+            <a href={`/#tutorials`} class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-8 py-3.5 rounded-full font-medium transition-all shadow-lg shadow-rose-900/20 group">
                 View Tutorials
                 <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform" style="stroke-width: 2;"></iconify-icon>
             </a>
