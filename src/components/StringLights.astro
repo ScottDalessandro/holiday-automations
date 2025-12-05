@@ -1,20 +1,27 @@
 ---
 // Interactive string lights navigation component
+interface Props {
+    minimal?: boolean;
+}
+
 interface NavBulb {
     color: string;
     bg: string;
     label: string;
     link: string;
     external?: boolean;
+    alwaysActive?: boolean;
 }
 
+const { minimal = false } = Astro.props;
+
 const navBulbs: NavBulb[] = [
-    { color: 'text-white', bg: 'bg-white', label: 'Home', link: '/' },
+    { color: 'text-white', bg: 'bg-white', label: 'Home', link: '/', alwaysActive: true },
     { color: 'text-violet-400', bg: 'bg-violet-400', label: 'Getting Started', link: '/getting-started' },
     { color: 'text-rose-500', bg: 'bg-rose-500', label: 'Intro Video', link: '#about' },
     { color: 'text-emerald-500', bg: 'bg-emerald-500', label: 'Tutorials', link: '#tutorials' },
     { color: 'text-amber-400', bg: 'bg-amber-400', label: 'About', link: '#about' },
-    { color: 'text-sky-400', bg: 'bg-sky-400', label: 'Resources', link: 'https://docs.n8n.io', external: true }
+    { color: 'text-sky-400', bg: 'bg-sky-400', label: 'Resources', link: 'https://docs.n8n.io', external: true, alwaysActive: true }
 ];
 ---
 
@@ -28,33 +35,40 @@ const navBulbs: NavBulb[] = [
         </svg>
 
         <!-- Bulbs Container -->
-        <div id="lights-container" class="absolute top-0 left-0 w-full h-full flex justify-between px-20 pt-1 pointer-events-auto">
+        <div id="lights-container" class="absolute top-0 left-0 w-full h-full flex justify-between px-20 pt-1 pointer-events-auto" data-minimal={minimal}>
             {navBulbs.map((config, i) => {
                 const center = 2.5;
                 const dist = Math.abs(i - center);
                 const offset = (dist * dist) * 1.2 + 0.5;
+                const isActive = !minimal || config.alwaysActive;
+                const bulbColor = isActive ? config.bg : 'bg-slate-700';
+                const textColor = isActive ? config.color : 'text-slate-700';
+                const glowStyle = isActive ? 'shadow-[0_0_10px_2px_currentColor]' : 'shadow-none';
                 return (
                     <div
-                        class="flex flex-col items-center bulb-interactive group relative"
+                        class={`flex flex-col items-center group relative ${isActive ? 'bulb-interactive cursor-pointer' : 'cursor-default opacity-40'}`}
                         style={`transform: translateY(${offset * 8}px)`}
-                        data-link={config.link}
+                        data-link={isActive ? config.link : ''}
                         data-external={config.external || false}
                         data-color={config.bg}
+                        data-active={isActive}
                     >
                         <!-- Wire connector -->
-                        <div class="w-0.5 h-3 md:h-5 bg-slate-700 group-hover:bg-slate-500 transition-colors"></div>
+                        <div class={`w-0.5 h-3 md:h-5 bg-slate-700 ${isActive ? 'group-hover:bg-slate-500' : ''} transition-colors`}></div>
 
                         <!-- Bulb Glass -->
                         <div
-                            class={`bulb-glass w-4 h-4 md:w-5 md:h-5 rounded-full ${config.bg} shadow-[0_0_10px_2px_currentColor] ${config.color} transition-all duration-300`}
-                            style={`animation: light-turn-on 0.5s ease-out forwards ${i * 0.2 + 0.5}s`}
+                            class={`bulb-glass w-4 h-4 md:w-5 md:h-5 rounded-full ${bulbColor} ${glowStyle} ${textColor} transition-all duration-300`}
+                            style={isActive ? `animation: light-turn-on 0.5s ease-out forwards ${i * 0.2 + 0.5}s` : ''}
                         ></div>
 
-                        <!-- Tooltip -->
-                        <div class="bulb-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-700 text-white text-[10px] font-medium px-3 py-1.5 rounded-lg shadow-xl opacity-0 transition-all duration-300 pointer-events-none whitespace-nowrap z-50">
-                            <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 border-t border-l border-slate-700 rotate-45"></div>
-                            {config.label}
-                        </div>
+                        <!-- Tooltip (only for active bulbs) -->
+                        {isActive && (
+                            <div class="bulb-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-700 text-white text-[10px] font-medium px-3 py-1.5 rounded-lg shadow-xl opacity-0 transition-all duration-300 pointer-events-none whitespace-nowrap z-50">
+                                <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 border-t border-l border-slate-700 rotate-45"></div>
+                                {config.label}
+                            </div>
+                        )}
                     </div>
                 );
             })}
@@ -70,7 +84,11 @@ bulbs.forEach((bulbWrapper) => {
     const link = bulbWrapper.getAttribute('data-link');
     const external = bulbWrapper.getAttribute('data-external') === 'true';
     const colorClass = bulbWrapper.getAttribute('data-color');
+    const isActive = bulbWrapper.getAttribute('data-active') === 'true';
     const bulb = bulbWrapper.querySelector('.bulb-glass');
+
+    // Skip inactive bulbs
+    if (!isActive || !link) return;
 
     // Hover: Sway Wire
     bulbWrapper.addEventListener('mouseenter', () => {
