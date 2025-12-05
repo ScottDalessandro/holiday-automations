@@ -6,9 +6,9 @@
 <section class="w-full max-w-4xl mx-auto pt-32 pb-20 px-6 text-center flex flex-col items-center relative">
 
     <!-- Badge -->
-    <div class="fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold tracking-wide mb-8 animate-pulse shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]">
+    <!-- <div class="fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold tracking-wide mb-8 animate-pulse shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]">
         <span>🎄</span> NEW 2024 WORKFLOWS
-    </div>
+    </div> -->
 
     <!-- Heading -->
     <h1 class="fade-up text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tighter leading-[1.1] mb-6">
@@ -74,16 +74,207 @@
         </div>
     </div>
 
-    <!-- Live Countdown -->
-    <div class="fade-up mt-6 flex items-center gap-2 text-amber-400 bg-amber-500/5 px-4 py-2 rounded-full border border-amber-500/20">
-        <span class="animate-pulse">🎄</span>
-        <span id="countdown" class="font-mono text-sm font-semibold tracking-tight">Loading cheer...</span>
+    <!-- Hanukkah Menorah Countdown -->
+    <div class="fade-up mt-6 flex flex-col items-center gap-4">
+        <div class="text-blue-400 text-sm font-semibold tracking-wide">
+            <span id="hanukkah-countdown">Loading...</span>
+        </div>
+
+        <!-- Menorah -->
+        <div class="menorah-container relative flex items-end justify-center gap-1 p-4 bg-blue-500/5 rounded-2xl border border-blue-500/20 hover:border-blue-400/40 transition-colors group">
+            <!-- Left 4 candles -->
+            <div class="candle-wrapper" data-candle="1">
+                <div class="candle"></div>
+            </div>
+            <div class="candle-wrapper" data-candle="2">
+                <div class="candle"></div>
+            </div>
+            <div class="candle-wrapper" data-candle="3">
+                <div class="candle"></div>
+            </div>
+            <div class="candle-wrapper" data-candle="4">
+                <div class="candle"></div>
+            </div>
+
+            <!-- Shamash (center, taller) -->
+            <div class="candle-wrapper shamash" data-candle="shamash">
+                <div class="candle"></div>
+            </div>
+
+            <!-- Right 4 candles -->
+            <div class="candle-wrapper" data-candle="5">
+                <div class="candle"></div>
+            </div>
+            <div class="candle-wrapper" data-candle="6">
+                <div class="candle"></div>
+            </div>
+            <div class="candle-wrapper" data-candle="7">
+                <div class="candle"></div>
+            </div>
+            <div class="candle-wrapper" data-candle="8">
+                <div class="candle"></div>
+            </div>
+
+            <!-- Menorah Base -->
+            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 w-32 h-2 bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 rounded-full shadow-lg"></div>
+            <div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-20 h-3 bg-gradient-to-r from-amber-700 via-amber-600 to-amber-700 rounded-b-lg shadow-lg"></div>
+        </div>
+
+        <p class="text-blue-300/60 text-xs">Hover over candles to light them!</p>
+    </div>
+
+    <!-- Live Countdowns -->
+    <div class="fade-up mt-6 flex flex-col sm:flex-row items-center gap-3">
+        <!-- Christmas Countdown -->
+        <div class="flex items-center gap-2 text-amber-400 bg-amber-500/5 px-4 py-2 rounded-full border border-amber-500/20">
+            <span class="animate-pulse">🎄</span>
+            <span id="countdown" class="font-mono text-sm font-semibold tracking-tight">Loading cheer...</span>
+        </div>
+        <!-- New Year Countdown -->
+        <div class="flex items-center gap-2 text-emerald-400 bg-emerald-500/5 px-4 py-2 rounded-full border border-emerald-500/20">
+            <span class="animate-pulse">🎆</span>
+            <span id="newyear-countdown" class="font-mono text-sm font-semibold tracking-tight">Loading...</span>
+        </div>
     </div>
 
 </section>
 
+<style>
+    .menorah-container {
+        min-height: 100px;
+    }
+
+    .candle-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+        padding-bottom: 12px;
+    }
+
+    .candle-wrapper:hover {
+        transform: scale(1.1);
+    }
+
+    .candle-wrapper .candle {
+        width: 8px;
+        height: 32px;
+        background: linear-gradient(to bottom, #60a5fa, #3b82f6);
+        border-radius: 2px 2px 0 0;
+        position: relative;
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+
+    .candle-wrapper.shamash {
+        margin: 0 6px;
+        padding-bottom: 20px;
+    }
+
+    .candle-wrapper.shamash .candle {
+        height: 40px;
+        width: 10px;
+        background: linear-gradient(to bottom, #fbbf24, #f59e0b);
+        box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+    }
+
+    /* Flame - hidden by default */
+    .candle-wrapper .candle::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        width: 8px;
+        height: 14px;
+        background: linear-gradient(to top, #fbbf24, #fb923c, #f97316);
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        opacity: 0;
+        transition: all 0.3s ease;
+        filter: blur(0.5px);
+    }
+
+    /* Flame glow */
+    .candle-wrapper .candle::after {
+        content: '';
+        position: absolute;
+        top: -16px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        width: 16px;
+        height: 20px;
+        background: radial-gradient(ellipse, rgba(251, 191, 36, 0.6), transparent);
+        border-radius: 50%;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    /* Lit state */
+    .candle-wrapper.lit .candle::before,
+    .candle-wrapper:hover .candle::before {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        animation: flicker 0.5s ease-in-out infinite alternate;
+    }
+
+    .candle-wrapper.lit .candle::after,
+    .candle-wrapper:hover .candle::after {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        animation: glow 0.5s ease-in-out infinite alternate;
+    }
+
+    /* Shamash always lit */
+    .candle-wrapper.shamash .candle::before {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        width: 10px;
+        height: 16px;
+        animation: flicker 0.4s ease-in-out infinite alternate;
+    }
+
+    .candle-wrapper.shamash .candle::after {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        animation: glow 0.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes flicker {
+        0% {
+            transform: translateX(-50%) scale(1) rotate(-2deg);
+            filter: blur(0.5px);
+        }
+        100% {
+            transform: translateX(-50%) scale(1.1) rotate(2deg);
+            filter: blur(1px);
+        }
+    }
+
+    @keyframes glow {
+        0% {
+            opacity: 0.6;
+            transform: translateX(-50%) scale(1);
+        }
+        100% {
+            opacity: 0.9;
+            transform: translateX(-50%) scale(1.2);
+        }
+    }
+
+    /* Days indicator on candles */
+    .candle-wrapper[data-days]::after {
+        content: attr(data-days);
+        position: absolute;
+        bottom: -4px;
+        font-size: 8px;
+        color: #93c5fd;
+        font-weight: bold;
+        font-family: monospace;
+    }
+</style>
+
 <script>
-// Countdown Timer
+// Christmas Countdown Timer
 const countdownEl = document.getElementById('countdown');
 const updateCountdown = () => {
     if (!countdownEl) return;
@@ -100,6 +291,95 @@ const updateCountdown = () => {
 };
 updateCountdown();
 setInterval(updateCountdown, 1000 * 60);
+
+// New Year Countdown Timer
+const newYearCountdownEl = document.getElementById('newyear-countdown');
+const updateNewYearCountdown = () => {
+    if (!newYearCountdownEl) return;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const newYear = new Date(currentYear + 1, 0, 1); // January 1st of next year
+    const diff = newYear.getTime() - now.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    newYearCountdownEl.textContent = `${days}d ${hours}h until New Year`;
+};
+updateNewYearCountdown();
+setInterval(updateNewYearCountdown, 1000 * 60);
+
+// Hanukkah Countdown Timer with Menorah
+const hanukkahCountdownEl = document.getElementById('hanukkah-countdown');
+const candleWrappers = document.querySelectorAll('.candle-wrapper:not(.shamash)');
+
+// Hanukkah 2025: December 14 (sundown) - December 22
+// Hanukkah 2026: December 4 (sundown) - December 12
+const getHanukkahDates = (year: number) => {
+    const dates: Record<number, { start: Date; end: Date }> = {
+        2024: { start: new Date(2024, 11, 25), end: new Date(2025, 0, 2) },
+        2025: { start: new Date(2025, 11, 14), end: new Date(2025, 11, 22) },
+        2026: { start: new Date(2026, 11, 4), end: new Date(2026, 11, 12) },
+        2027: { start: new Date(2027, 11, 24), end: new Date(2028, 0, 1) },
+    };
+    return dates[year] || dates[2025];
+};
+
+const updateHanukkahCountdown = () => {
+    if (!hanukkahCountdownEl) return;
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    let hanukkah = getHanukkahDates(currentYear);
+
+    // If we're past this year's Hanukkah, look at next year
+    if (now > hanukkah.end) {
+        hanukkah = getHanukkahDates(currentYear + 1);
+    }
+
+    const { start, end } = hanukkah;
+
+    // Check if we're during Hanukkah
+    if (now >= start && now <= end) {
+        // Calculate which night of Hanukkah (1-8)
+        const diffDays = Math.floor((now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+        const night = Math.min(diffDays + 1, 8);
+
+        hanukkahCountdownEl.innerHTML = `✨ Night ${night} of Hanukkah! <span class="text-amber-400">Chag Sameach!</span> ✨`;
+
+        // Light the appropriate candles (right to left, as is tradition)
+        candleWrappers.forEach((wrapper, index) => {
+            // Candles are numbered 1-8, light from right to left
+            // Array index 0-3 are left candles, 4-7 are right candles
+            // Night 1: light candle 8 (index 7)
+            // Night 2: light candles 7,8 (index 6,7)
+            // etc.
+            const candleNumber = index < 4 ? index + 1 : index + 1;
+            const shouldLight = candleNumber > (8 - night);
+
+            if (shouldLight) {
+                wrapper.classList.add('lit');
+            } else {
+                wrapper.classList.remove('lit');
+            }
+        });
+    } else {
+        // Countdown to Hanukkah
+        const diff = start.getTime() - now.getTime();
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        if (days === 0) {
+            hanukkahCountdownEl.textContent = `🕎 Hanukkah begins tonight at sundown!`;
+        } else {
+            hanukkahCountdownEl.textContent = `🕎 ${days}d ${hours}h until Hanukkah`;
+        }
+
+        // Remove lit state from all candles when not during Hanukkah
+        candleWrappers.forEach(wrapper => wrapper.classList.remove('lit'));
+    }
+};
+
+updateHanukkahCountdown();
+setInterval(updateHanukkahCountdown, 1000 * 60);
 
 // Confetti Button
 const btn = document.getElementById('start-btn');
