@@ -5,7 +5,9 @@ import vercel from '@astrojs/vercel';
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind()],
-  output: 'hybrid',
-  adapter: vercel(),
+  output: 'server',
+  adapter: vercel({
+    isr: true, // Enable Incremental Static Regeneration for better performance
+  }),
   site: 'https://holidayautomations.com',
 });
