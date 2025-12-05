@@ -9,6 +9,7 @@ interface NavBulb {
 }
 
 const navBulbs: NavBulb[] = [
+    { color: 'text-white', bg: 'bg-white', label: 'Home', link: `${import.meta.env.BASE_URL}/` },
     { color: 'text-violet-400', bg: 'bg-violet-400', label: 'Getting Started', link: `${import.meta.env.BASE_URL}/getting-started` },
     { color: 'text-rose-500', bg: 'bg-rose-500', label: 'Intro Video', link: '#about' },
     { color: 'text-emerald-500', bg: 'bg-emerald-500', label: 'Tutorials', link: '#tutorials' },
@@ -29,7 +30,7 @@ const navBulbs: NavBulb[] = [
         <!-- Bulbs Container -->
         <div id="lights-container" class="absolute top-0 left-0 w-full h-full flex justify-between px-20 pt-1 pointer-events-auto">
             {navBulbs.map((config, i) => {
-                const center = 1.5;
+                const center = 2.5;
                 const dist = Math.abs(i - center);
                 const offset = (dist * dist) * 1.2 + 0.5;
                 return (
