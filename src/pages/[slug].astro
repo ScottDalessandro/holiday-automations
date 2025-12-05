@@ -1,6 +1,8 @@
 ---
 import LessonLayout from '../layouts/LessonLayout.astro';
 import { getCollection } from 'astro:content';
+import fs from 'node:fs';
+import path from 'node:path';
 
 export async function getStaticPaths() {
   const lessons = await getCollection('lessons');
@@ -16,6 +18,17 @@ const data = lesson.data;
 
 // Support both videoId (YouTube ID) and videoUrl (full URL)
 const videoUrl = data.videoUrl || (data.videoId ? `https://youtu.be/${data.videoId}` : undefined);
+
+// Load workflow JSON from file if workflowFile is specified
+let workflowJson = data.workflowJson;
+if (data.workflowFile) {
+  try {
+    const workflowPath = path.join(process.cwd(), 'public', data.workflowFile);
+    workflowJson = fs.readFileSync(workflowPath, 'utf-8');
+  } catch (e) {
+    console.warn(`Could not load workflow file: ${data.workflowFile}`);
+  }
+}
 ---
 
 <LessonLayout
@@ -33,7 +46,8 @@ const videoUrl = data.videoUrl || (data.videoId ? `https://youtu.be/${data.video
   skills={data.skills}
   bonusIdeas={data.bonusIdeas}
   nextLesson={data.nextLesson}
-  workflowJson={data.workflowJson}
+  workflowJson={workflowJson}
+  slug={lesson.slug}
 >
   <Content />
 </LessonLayout>

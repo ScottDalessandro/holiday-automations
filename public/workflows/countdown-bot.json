@@ -1,0 +1,152 @@
+{
+  "name": "holiday-countdown-bot",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-880, -64],
+      "id": "e05b9fd6-e7e3-4cb7-9018-65866307a7dd",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be1ef870-ec4b-4815-8daf-13e1e036717d",
+              "name": "isTest",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "f3d35f30-b5af-43ea-b4dc-81e96f590265",
+              "name": "testMonth",
+              "value": 12,
+              "type": "number"
+            },
+            {
+              "id": "7a71be41-bf3e-4ad9-80c0-80c73050aace",
+              "name": "testDay",
+              "value": 15,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-608, -64],
+      "id": "04216fa4-e383-43b0-99cb-abeddb18e7f0",
+      "name": "CONFIG"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d0fa6f3e-f91b-45e8-ac00-1685088e1862",
+              "name": "currentDay",
+              "value": "={{ $json.isTest ? $json.testDay : $now.day}}",
+              "type": "number"
+            },
+            {
+              "id": "6f34eb7c-fb6a-498a-9804-911567763ff1",
+              "name": "currentMonth",
+              "value": "={{ $json.isTest ? $json.testMonth : $now.month }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-352, -64],
+      "id": "be4cab1f-34a1-49c8-bfba-4f3d87961a51",
+      "name": "RESOLVE-DATES"
+    },
+    {
+      "parameters": {
+        "sendTo": "your-email@example.com",
+        "subject": "Days until Christmas",
+        "message": "=Days until Christmas: {{ 25 - $json.currentDay }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [336, -80],
+      "id": "4b7f08c6-9ea2-433b-8ca9-f5e8e3901689",
+      "name": "Send a message"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 1-25 12 *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-880, 144],
+      "id": "ce6c7e19-ac71-40f3-a24f-00b16b3de94b",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "CONFIG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CONFIG": {
+      "main": [
+        [
+          {
+            "node": "RESOLVE-DATES",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RESOLVE-DATES": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "CONFIG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

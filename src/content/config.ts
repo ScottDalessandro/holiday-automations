@@ -60,6 +60,7 @@ const lessons = defineCollection({
     nextLesson: lessonLinkSchema.optional(),
     prevLesson: lessonLinkSchema.optional(),
     workflowJson: z.string().optional(),
+    workflowFile: z.string().optional(),
     // Card display fields
     shareWith: z.string().optional(),
     businessSkill: z.string().optional(),

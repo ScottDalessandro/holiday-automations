@@ -4,11 +4,12 @@ interface Props {
   title?: string;
   icon?: string;
   workflowJson?: string;
+  workflowSlug?: string;
   resources?: { icon: string; label: string; url: string }[];
   skills?: string[];
 }
 
-const { variant, title, icon, workflowJson, resources, skills } = Astro.props;
+const { variant, title, icon, workflowJson, workflowSlug, resources, skills } = Astro.props;
 ---
 
 {variant === 'workflow' && (
@@ -17,14 +18,25 @@ const { variant, title, icon, workflowJson, resources, skills } = Astro.props;
             <span class="text-xl">&#11015;&#65039;</span>
             <h3 class="font-bold text-white">Get the Workflow</h3>
         </div>
-        <p class="text-slate-400 text-sm mb-6">Import directly into your n8n instance to get started immediately.</p>
-        <button
-            class="copy-workflow-btn w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl py-3 px-6 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-emerald-900/30 group"
-            data-workflow={workflowJson}
-        >
-            <iconify-icon icon="lucide:clipboard-copy" width="18"></iconify-icon>
-            Copy Workflow JSON
-        </button>
+        <p class="text-slate-400 text-sm mb-4">Import directly into your n8n instance to get started immediately.</p>
+        <div class="space-y-3">
+            <button
+                class="copy-workflow-btn w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl py-3 px-6 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-emerald-900/30 group"
+                data-workflow={workflowJson}
+            >
+                <iconify-icon icon="lucide:clipboard-copy" width="18"></iconify-icon>
+                Copy Workflow JSON
+            </button>
+            {workflowSlug && (
+                <a
+                    href={`${import.meta.env.BASE_URL}/workflows/${workflowSlug}`}
+                    class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-medium rounded-xl py-2.5 px-6 flex items-center justify-center gap-2 transition-all border border-slate-700"
+                >
+                    <iconify-icon icon="lucide:code-2" width="16"></iconify-icon>
+                    View JSON
+                </a>
+            )}
+        </div>
     </div>
 )}
 

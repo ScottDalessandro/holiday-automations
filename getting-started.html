@@ -1,0 +1,626 @@
+<html lang="en" class="scroll-smooth"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started | Holiday Automations</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+body {
+font-family: 'Inter', sans-serif;
+background-color: #020617; /* slate-950 */
+cursor: default;
+}
+
+/* --- Shared Animations from Homepage --- */
+@keyframes snowfall {
+0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+10% { opacity: 1; }
+90% { opacity: 1; }
+100% { transform: translateY(110vh) translateX(20px); opacity: 0; }
+}
+.snow-layer-1 { animation: snowfall 15s linear infinite; }
+.snow-layer-2 { animation: snowfall 10s linear infinite; }
+
+@keyframes twinkle {
+0%, 100% { opacity: 0.3; transform: scale(0.8); }
+50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes light-turn-on {
+0% { opacity: 0; transform: scale(0); }
+60% { opacity: 1; transform: scale(1.2); }
+100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bulb-bounce {
+0% { transform: translateY(0) scale(1); }
+40% { transform: translateY(-8px) scale(1.1); }
+100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes wire-sway {
+0%, 100% { transform: rotate(0deg); }
+25% { transform: rotate(0.5deg); }
+75% { transform: rotate(-0.5deg); }
+}
+
+.bulb-interactive { position: relative; cursor: pointer; transition: transform 0.3s ease; }
+.bulb-interactive:hover .bulb-glass {
+animation: bulb-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+filter: brightness(1.3) drop-shadow(0 0 15px currentColor);
+}
+.bulb-interactive:hover .bulb-tooltip { opacity: 1; transform: translate(-50%, 14px); }
+.lights-wrapper.swaying { animation: wire-sway 1s ease-in-out infinite; transform-origin: top center; }
+
+@keyframes sparkle-anim {
+0% { transform: scale(0); opacity: 1; }
+100% { transform: scale(1); opacity: 0; }
+}
+.cursor-sparkle { pointer-events: none; position: fixed; animation: sparkle-anim 0.8s ease-out forwards; }
+
+.fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* Utilities */
+.bg-grid {
+background-size: 50px 50px;
+background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #020617; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+</style></head>
+<body class="bg-slate-950 text-slate-300 antialiased overflow-x-hidden relative selection:bg-rose-500/30 selection:text-rose-200">
+
+    <!-- Atmospheric Backgrounds -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <!-- Grid -->
+        <div class="absolute inset-0 bg-grid opacity-100"></div>
+        <!-- Gradient Glows -->
+        <div class="absolute top-0 left-0 w-[40%] h-[40%] bg-rose-500/5 blur-[120px] rounded-full mix-blend-screen"></div>
+        <div class="absolute bottom-0 right-0 w-[40%] h-[40%] bg-emerald-500/5 blur-[120px] rounded-full mix-blend-screen"></div>
+        <!-- Stars & Snow Container -->
+        <div id="star-container" class="absolute inset-0"></div>
+        <div id="snow-container" class="absolute inset-0"></div>
+    </div>
+
+    <!-- String Lights Navigation (Sticky Top) -->
+    <div class="fixed top-0 left-0 w-full z-50 flex justify-center h-20 pointer-events-none">
+        <div id="lights-wrapper" class="lights-wrapper relative w-[120%] min-w-[800px] max-w-4xl h-full">
+            <svg class="absolute top-[-20px] left-0 w-full h-24 stroke-slate-600 fill-none opacity-90 drop-shadow-sm" viewBox="0 0 100 25" preserveAspectRatio="none">
+                <path d="M0,0 Q50,35 100,0" stroke-width="0.4"></path>
+            </svg>
+            <div id="lights-container" class="absolute top-0 left-0 w-full h-full flex justify-between px-20 pt-1 pointer-events-auto">
+                <!-- Bulbs injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 flex flex-col items-center pt-24 pb-20 px-6">
+
+        <!-- Hero Section (Compact) -->
+        <section class="w-full max-w-4xl mx-auto py-12 text-center fade-up">
+            <div class="text-5xl mb-6 animate-bounce" style="animation-duration: 2s;">🎄</div>
+            <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">How This Works</h1>
+            <p class="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
+                A quick guide to getting the most out of these tutorials.
+            </p>
+        </section>
+
+        <!-- Video Section -->
+        <div class="fade-up w-full max-w-4xl mx-auto mb-12 relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-rose-500/20 to-amber-500/20 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition duration-700"></div>
+            <div class="relative aspect-video w-full bg-slate-900 rounded-xl border border-slate-800 overflow-hidden shadow-2xl z-10 group-hover:border-slate-700 transition-colors">
+                <div class="absolute inset-0 bg-slate-900 flex items-center justify-center cursor-pointer">
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-800 via-slate-950 to-slate-950"></div>
+                    <div class="relative z-20 flex flex-col items-center gap-4 group/play">
+                        <div class="w-20 h-20 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm flex items-center justify-center transition-all duration-300 group-hover/play:scale-110 group-hover/play:bg-white/10 shadow-lg">
+                            <iconify-icon icon="lucide:play" width="32" class="text-white fill-white ml-1"></iconify-icon>
+                        </div>
+                        <span class="text-sm font-medium text-slate-400 group-hover/play:text-white transition-colors">Watch Introduction</span>
+                    </div>
+                    <div class="absolute bottom-4 right-4 px-2.5 py-1 bg-black/60 backdrop-blur-md text-xs font-semibold text-white rounded-md border border-white/10">
+                        02:14
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expectations Card -->
+        <div class="fade-up w-full max-w-3xl mx-auto mt-6 bg-gradient-to-br from-amber-500/10 to-amber-500/5 border border-amber-500/30 rounded-2xl p-8 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div class="relative z-10">
+                <div class="text-3xl mb-4">☕</div>
+                <h2 class="text-xl font-bold text-amber-300 mb-4 tracking-tight">Set Your Expectations</h2>
+                <div class="space-y-4 text-slate-300 leading-relaxed font-light">
+                    <p>
+                        This is a passion project, not a polished course. I'm a developer who loves automation, not a full-time content creator. The videos are casual, the production is minimal, and I'm building these tutorials in my spare time between client work and family life.
+                    </p>
+                    <p>
+                        That said — the workflows are real, the skills transfer to actual business use cases, and I genuinely want you to succeed. Just know that 'perfect' isn't the goal here. 'Useful' is.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How To Use This Site -->
+        <div class="fade-up w-full max-w-3xl mx-auto mt-8 bg-slate-900/60 border border-slate-800 rounded-2xl p-8 backdrop-blur-sm">
+            <h2 class="text-xl font-bold text-white mb-8 flex items-center gap-2">
+                <span>📍</span> How to Navigate
+            </h2>
+            <div class="space-y-8">
+                <!-- Step 1 -->
+                <div class="flex gap-5">
+                    <div class="shrink-0 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">1</div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Pick a tutorial</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Start with Holiday Countdown Bot if you're brand new to n8n. They build on each other slightly, but each one stands alone.</p>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="flex gap-5">
+                    <div class="shrink-0 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">2</div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Watch the video</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Follow along at your own pace. Pause, rewind, skip around. I won't know.</p>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="flex gap-5">
+                    <div class="shrink-0 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">3</div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Build it yourself</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">The real learning happens when your hands are on the keyboard. Copy the workflow or build from scratch.</p>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="flex gap-5">
+                    <div class="shrink-0 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">4</div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Check the resources</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Each tutorial has code snippets, concept explanations, and links to docs. Use them.</p>
+                    </div>
+                </div>
+                <!-- Step 5 -->
+                <div class="flex gap-5">
+                    <div class="shrink-0 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">5</div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Make it your own</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">The bonus ideas aren't homework. They're suggestions for how to extend what you built into something useful for YOU.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANATOMY OF A LESSON SECTION -->
+        <section class="w-full relative z-10 px-0 mt-8">
+            <!-- Section Header -->
+            <div class="max-w-4xl mx-auto pt-16 pb-8 text-center fade-up">
+                <div class="text-rose-400 text-sm tracking-wide uppercase mb-2 font-medium">📸 Anatomy of a Lesson</div>
+                <h2 class="text-3xl font-bold text-white mb-3">What You'll Find on Each Tutorial Page</h2>
+                <p class="text-slate-400">Here's a quick tour so you know where everything is.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Card 1: Video Walkthrough (Left) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 1: VIDEO SECTION ]</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">1</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Video Walkthrough</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            Watch me build the entire workflow from scratch. Pause, rewind, speed up — whatever works for you. The video is the main event, but everything below supports it.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Workflow Overview (Right) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all lg:order-2">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 2: WORKFLOW OVERVIEW ]</span>
+                        </div>
+                    </div>
+                    <div class="lg:order-1">
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">2</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Workflow Overview</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            See the complete automation at a glance before you build it. Each colored pill is an n8n node. Follow the arrows left to right to understand the flow. This is your roadmap.
+                        </p>
+                        <div class="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 text-amber-200 text-sm flex gap-2">
+                            <span>💡</span>
+                            <span>Open this in a second tab while you build so you don't lose your place.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Step-by-Step (Left) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 3: STEP BY STEP ]</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">3</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Step-by-Step Guide</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            Detailed instructions for each part of the build. Follow along with the video or use these as a reference when you get stuck. Each step tells you exactly which node to add and how to configure it.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 4: The Code (Right) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all lg:order-2">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 4: CODE BLOCKS ]</span>
+                        </div>
+                    </div>
+                    <div class="lg:order-1">
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">4</div>
+                        <h3 class="text-xl font-bold text-white mb-3">The Code</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            Copy-paste ready expressions and code snippets. Click the copy button to grab the exact syntax. No typos, no guessing.
+                        </p>
+                        <div class="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 text-amber-200 text-sm flex gap-2">
+                            <span>💡</span>
+                            <span>These are the expressions you'll paste into n8n's expression editor.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Get Workflow (Left) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 5: GET WORKFLOW ]</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">5</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Get the Workflow</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            Don't want to build from scratch? Download the complete workflow JSON and import it directly into your n8n instance. Great for comparing your work or skipping ahead.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 6: Key Concepts (Right) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all lg:order-2">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 6: KEY CONCEPTS ]</span>
+                        </div>
+                    </div>
+                    <div class="lg:order-1">
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">6</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Key Concepts</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            The 'why' behind the 'how.' These cards explain the underlying concepts — cron expressions, ternary operators, test patterns — so you actually understand what you're building, not just copying.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 7: Skills (Left) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 7: SKILLS ]</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">7</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Skills You'll Learn</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            A quick snapshot of the transferable skills in each tutorial. These aren't just holiday tricks — they're real automation patterns you'll use in business workflows.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 8: Resources (Right) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all lg:order-2">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 8: RESOURCES ]</span>
+                        </div>
+                    </div>
+                    <div class="lg:order-1">
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">8</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Resources</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            Links to official docs, tools, and references. When you want to go deeper or troubleshoot something specific, start here.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 9: Bonus Ideas (Left) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-8 fade-up">
+                    <div class="bg-slate-900/50 rounded-2xl p-3 border border-slate-800 hover:border-slate-700 transition-all">
+                        <div class="bg-slate-800 rounded-xl aspect-video w-full flex items-center justify-center">
+                            <span class="text-slate-600 text-xs sm:text-sm font-mono tracking-wider">[ IMAGE 9: BONUS IDEAS ]</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-bold text-sm mb-4 shadow-[0_0_15px_-3px_rgba(244,63,94,0.4)]">9</div>
+                        <h3 class="text-xl font-bold text-white mb-3">Bonus Ideas</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4 font-light">
+                            Ways to extend the workflow into something more useful for you. Not homework — just inspiration. Pick one that sounds fun and make it your own.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Closing Card -->
+                <div class="max-w-2xl mx-auto mt-8 mb-16 text-center bg-slate-900/40 border border-slate-800 rounded-2xl p-8 fade-up">
+                    <div class="text-3xl mb-4">🎯</div>
+                    <p class="text-slate-400 text-lg font-light">
+                        You don't need to use every section. Watch the video, build the workflow, and dip into the rest when you need it.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- What You'll Need -->
+        <div class="fade-up w-full max-w-3xl mx-auto mt-8 bg-slate-900/60 border border-slate-800 rounded-2xl p-8 backdrop-blur-sm">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span>🛠️</span> What You'll Need
+            </h2>
+            <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 border border-emerald-500/20">
+                        <iconify-icon icon="lucide:check" width="14" stroke-width="3"></iconify-icon>
+                    </div>
+                    <span class="text-slate-300">An n8n account (cloud or self-hosted) — it's free to start</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 border border-emerald-500/20">
+                        <iconify-icon icon="lucide:check" width="14" stroke-width="3"></iconify-icon>
+                    </div>
+                    <span class="text-slate-300">A Google account (for Gmail and Sheets integrations)</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 border border-emerald-500/20">
+                        <iconify-icon icon="lucide:check" width="14" stroke-width="3"></iconify-icon>
+                    </div>
+                    <span class="text-slate-300">30-45 minutes per tutorial</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 border border-emerald-500/20">
+                        <iconify-icon icon="lucide:check" width="14" stroke-width="3"></iconify-icon>
+                    </div>
+                    <span class="text-slate-300">Willingness to tinker and break things</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Stuck? Ask for Help -->
+        <div class="fade-up w-full max-w-3xl mx-auto mt-8 bg-gradient-to-br from-sky-500/10 to-sky-500/5 border border-sky-500/30 rounded-2xl p-8 relative overflow-hidden">
+             <!-- Decorative elements -->
+             <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-sky-500/10 blur-[60px] rounded-full pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <div class="text-3xl mb-4">💬</div>
+                <h2 class="text-xl font-bold text-white mb-4 tracking-tight">Hit a Wall?</h2>
+                <p class="text-slate-300 mb-4 font-light">
+                    These tutorials aren't perfect, and n8n changes fast. If something doesn't work, you're probably not the problem.
+                </p>
+                <p class="text-slate-300 mb-8 font-light">
+                    Drop a message in the Slack channel. I check it regularly, and other learners might have hit the same issue. No question is too basic.
+                </p>
+                
+                <a href="#" class="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-sky-900/20 hover:-translate-y-0.5 active:translate-y-0">
+                    <iconify-icon icon="lucide:slack" width="18"></iconify-icon>
+                    Ask in Slack
+                    <iconify-icon icon="lucide:arrow-right" width="16" class="ml-1"></iconify-icon>
+                </a>
+            </div>
+        </div>
+
+        <!-- CTA Bottom -->
+        <section class="w-full max-w-3xl mx-auto mt-16 mb-8 text-center fade-up">
+            <h2 class="text-2xl font-bold text-white mb-3">Ready to build something?</h2>
+            <p class="text-slate-400 mb-8 font-light">Pick a tutorial and let's go.</p>
+            <a href="#" class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-8 py-3.5 rounded-full font-medium transition-all shadow-lg shadow-rose-900/20 group">
+                View Tutorials
+                <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform" stroke-width="2"></iconify-icon>
+            </a>
+        </section>
+
+        <!-- Footer (Consistent with Homepage) -->
+        <footer class="w-full border-t border-slate-800 bg-slate-950 text-center py-16 mt-12 relative z-10">
+            <div class="max-w-4xl mx-auto px-6">
+                <div class="flex justify-center gap-6 text-2xl mb-6 select-none opacity-80">
+                    <span>🎄</span><span>⛄</span><span>🎁</span><span>❄️</span><span>🦌</span>
+                </div>
+                <p class="text-amber-400/90 text-lg italic font-medium mb-3">
+                    Building Holiday Magic, One Workflow at a Time
+                </p>
+                <p class="text-slate-500 text-sm">
+                    A free learning resource for the automation-curious
+                </p>
+                
+                <div class="mt-8 pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between text-xs text-slate-600">
+                    <span>© 2024 Holiday Automations</span>
+                    <div class="flex gap-4 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-slate-400 transition-colors">Privacy</a>
+                        <a href="#" class="hover:text-slate-400 transition-colors">Terms</a>
+                        <a href="#" class="hover:text-slate-400 transition-colors">Twitter</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- 1. Background Atmospherics (Stars & Snow) ---
+        const starContainer = document.getElementById('star-container');
+        const snowContainer = document.getElementById('snow-container');
+
+        // Generate Stars
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'absolute bg-white rounded-full';
+            const size = Math.random() * 2 + 1; // 1px to 3px
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.opacity = Math.random() * 0.7 + 0.3;
+            star.style.animation = `twinkle ${Math.random() * 3 + 2}s ease-in-out infinite ${Math.random() * 5}s`;
+            starContainer.appendChild(star);
+        }
+
+        // Generate Snow
+        const createSnow = (count, layerClass) => {
+            for (let i = 0; i < count; i++) {
+                const flake = document.createElement('div');
+                flake.className = `absolute bg-white rounded-full opacity-60 ${layerClass}`;
+                const size = layerClass === 'snow-layer-1' ? 2 : 4;
+                flake.style.width = `${size}px`;
+                flake.style.height = `${size}px`;
+                flake.style.left = `${Math.random() * 100}%`;
+                flake.style.top = `-${Math.random() * 20}%`;
+                flake.style.animationDelay = `${Math.random() * 15}s`;
+                flake.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                snowContainer.appendChild(flake);
+            }
+        };
+        createSnow(30, 'snow-layer-1'); 
+        createSnow(15, 'snow-layer-2'); 
+
+        // --- 2. Interactive Navigation Lights Logic ---
+        const lightsContainer = document.getElementById('lights-container');
+        const lightsWrapper = document.getElementById('lights-wrapper');
+        
+        // Configuration for the 4 specific bulbs
+        const navBulbs = [
+            { 
+                color: 'text-rose-500', 
+                bg: 'bg-rose-500', 
+                label: 'Home', 
+                link: '#' 
+            },
+            { 
+                color: 'text-emerald-500', 
+                bg: 'bg-emerald-500', 
+                label: 'Tutorials', 
+                link: '#' 
+            },
+            { 
+                color: 'text-amber-400', 
+                bg: 'bg-amber-400', 
+                label: 'About', 
+                link: '#' 
+            },
+            { 
+                color: 'text-sky-400', 
+                bg: 'bg-sky-400', 
+                label: 'Resources', 
+                link: 'https://docs.n8n.io',
+                external: true
+            }
+        ];
+
+        navBulbs.forEach((config, i) => {
+            const bulbWrapper = document.createElement('div');
+            bulbWrapper.className = 'flex flex-col items-center bulb-interactive group relative';
+            
+            const wire = document.createElement('div');
+            wire.className = 'w-0.5 h-3 md:h-5 bg-slate-700 group-hover:bg-slate-500 transition-colors';
+            
+            const bulb = document.createElement('div');
+            bulb.className = `bulb-glass w-4 h-4 md:w-5 md:h-5 rounded-full ${config.bg} shadow-[0_0_10px_2px_currentColor] ${config.color} transition-all duration-300 opacity-0`;
+            bulb.style.animation = `light-turn-on 0.5s ease-out forwards ${i * 0.2 + 0.5}s, light-flicker 3s infinite alternate ${i * 0.2 + 1}s`;
+            
+            const tooltip = document.createElement('div');
+            tooltip.className = 'bulb-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-700 text-white text-[10px] font-medium px-3 py-1.5 rounded-lg shadow-xl opacity-0 transition-all duration-300 pointer-events-none whitespace-nowrap z-50';
+            tooltip.innerHTML = config.label;
+            const arrow = document.createElement('div');
+            arrow.className = 'absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 border-t border-l border-slate-700 rotate-45';
+            tooltip.prepend(arrow);
+
+            bulbWrapper.appendChild(wire);
+            bulbWrapper.appendChild(bulb);
+            bulbWrapper.appendChild(tooltip);
+            
+            const center = 1.5;
+            const dist = Math.abs(i - center);
+            const offset = (dist * dist) * 1.2 + 0.5;
+            bulbWrapper.style.transform = `translateY(${offset * 8}px)`;
+
+            bulbWrapper.addEventListener('mouseenter', () => {
+                lightsWrapper.classList.add('swaying');
+            });
+            bulbWrapper.addEventListener('mouseleave', () => {
+                lightsWrapper.classList.remove('swaying');
+            });
+
+            bulbWrapper.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const rect = bulb.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                for(let p=0; p<6; p++) {
+                    const spark = document.createElement('div');
+                    spark.className = `fixed w-1 h-1 rounded-full ${config.bg} z-[60] pointer-events-none`;
+                    spark.style.left = `${centerX}px`;
+                    spark.style.top = `${centerY}px`;
+                    document.body.appendChild(spark);
+                    
+                    const angle = (Math.PI * 2 / 6) * p;
+                    const velocity = 20 + Math.random() * 10;
+                    
+                    const anim = spark.animate([
+                        { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                        { transform: `translate(${Math.cos(angle) * velocity}px, ${Math.sin(angle) * velocity}px) scale(0)`, opacity: 0 }
+                    ], { duration: 400, easing: 'ease-out' });
+                    
+                    anim.onfinish = () => spark.remove();
+                }
+
+                if (config.external) {
+                    setTimeout(() => window.open(config.link, '_blank'), 150);
+                } else {
+                   // Just reload for demo purposes
+                   window.location.href = config.link;
+                }
+            });
+
+            lightsContainer.appendChild(bulbWrapper);
+        });
+
+        // --- 3. Cursor Sparkles ---
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.8) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'cursor-sparkle w-1 h-1 bg-amber-200 rounded-full shadow-[0_0_4px_#fcd34d] z-50';
+                sparkle.style.left = `${e.clientX}px`;
+                sparkle.style.top = `${e.clientY}px`;
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 800);
+            }
+        });
+
+        // --- 4. Scroll Fade Up Observer ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
+</body></html>

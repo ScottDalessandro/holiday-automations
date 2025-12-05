@@ -4,20 +4,58 @@ interface Props {
 }
 
 const { videoUrl } = Astro.props;
+
+// Extract YouTube video ID from various URL formats
+function getYouTubeId(url: string): string | null {
+  if (!url) return null;
+
+  // Handle youtu.be/VIDEO_ID format
+  if (url.includes('youtu.be/')) {
+    return url.split('youtu.be/')[1]?.split('?')[0] || null;
+  }
+
+  // Handle youtube.com/watch?v=VIDEO_ID format
+  if (url.includes('youtube.com/watch')) {
+    try {
+      return new URL(url).searchParams.get('v');
+    } catch {
+      return null;
+    }
+  }
+
+  // Handle youtube.com/embed/VIDEO_ID format
+  if (url.includes('youtube.com/embed/')) {
+    return url.split('youtube.com/embed/')[1]?.split('?')[0] || null;
+  }
+
+  return null;
+}
+
+const videoId = videoUrl ? getYouTubeId(videoUrl) : null;
+const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
 ---
 
 <section class="w-full max-w-4xl mx-auto px-6 mb-16 fade-up">
-    <div class="relative w-full aspect-video bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl shadow-rose-500/5 group cursor-pointer" data-video-url={videoUrl}>
-        <!-- Placeholder for Video -->
-        <div class="video-placeholder absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-10">
-            <div class="w-20 h-20 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-rose-600 group-hover:border-rose-500 transition-all duration-300 shadow-xl">
+    <div class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl shadow-rose-500/5 group cursor-pointer bg-slate-950" data-video-url={videoUrl}>
+        <!-- Placeholder for Video with Thumbnail -->
+        <div class="video-placeholder absolute inset-0 flex flex-col items-center justify-center z-10 rounded-2xl overflow-hidden">
+            {thumbnailUrl && (
+                <img
+                    src={thumbnailUrl}
+                    alt="Video thumbnail"
+                    class="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                    loading="lazy"
+                    onerror={`this.onerror=null; this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg';`}
+                />
+            )}
+            <div class="relative z-10 w-20 h-20 rounded-full bg-slate-900/80 backdrop-blur-sm border border-slate-700 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-rose-600 group-hover:border-rose-500 transition-all duration-300 shadow-xl">
                 <iconify-icon icon="lucide:play" width="32" class="ml-1"></iconify-icon>
             </div>
-            <span class="mt-4 text-slate-500 text-sm font-medium tracking-wide">Watch the Walkthrough</span>
+            <span class="relative z-10 mt-4 text-white text-sm font-medium tracking-wide drop-shadow-lg">Watch the Walkthrough</span>
         </div>
         <!-- Video iframe (hidden until clicked) -->
         <iframe
-            class="video-iframe absolute inset-0 w-full h-full hidden"
+            class="video-iframe absolute inset-0 w-full h-full hidden rounded-2xl"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen

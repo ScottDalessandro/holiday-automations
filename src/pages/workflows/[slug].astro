@@ -1,0 +1,313 @@
+---
+import { getCollection } from 'astro:content';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export async function getStaticPaths() {
+  const lessons = await getCollection('lessons');
+  return lessons
+    .filter((lesson) => lesson.data.workflowFile)
+    .map((lesson) => ({
+      params: { slug: lesson.slug },
+      props: { lesson },
+    }));
+}
+
+const { lesson } = Astro.props;
+const data = lesson.data;
+
+// Load workflow JSON from file
+let workflowJson = '';
+let workflowParsed = null;
+if (data.workflowFile) {
+  try {
+    const workflowPath = path.join(process.cwd(), 'public', data.workflowFile);
+    workflowJson = fs.readFileSync(workflowPath, 'utf-8');
+    workflowParsed = JSON.parse(workflowJson);
+    // Pretty print with 2-space indentation
+    workflowJson = JSON.stringify(workflowParsed, null, 2);
+  } catch (e) {
+    console.warn(`Could not load workflow file: ${data.workflowFile}`);
+  }
+}
+
+const nodeCount = workflowParsed?.nodes?.length || 0;
+
+// Server-side syntax highlighting for JSON
+function highlightJsonServer(json: string): string {
+  // Escape HTML
+  let escaped = json
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Apply syntax highlighting
+  return escaped
+    // Keys (before colon) - Christmas red
+    .replace(/"([^"\\]|\\.)*"\s*:/g, (match) => {
+      const key = match.slice(0, -1);
+      return `<span class="json-key">${key}</span>:`;
+    })
+    // String values (after colon) - Christmas green
+    .replace(/:\s*"([^"\\]|\\.)*"/g, (match) => {
+      const colonSpace = match.match(/^:\s*/)![0];
+      const value = match.slice(colonSpace.length);
+      return `${colonSpace}<span class="json-string">${value}</span>`;
+    })
+    // Numbers - Gold
+    .replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="json-number">$1</span>')
+    // Booleans - Candy cane pink
+    .replace(/:\s*(true|false)/g, ': <span class="json-boolean">$1</span>')
+    // Null - Snow white
+    .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>')
+    // Brackets - Icy blue
+    .replace(/([[{}\]])/g, '<span class="json-bracket">$1</span>');
+}
+
+const highlightedJson = highlightJsonServer(workflowJson);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{data.title} - Workflow JSON</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style is:global>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+        min-height: 100vh;
+        color: #e2e8f0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #334155;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .icon {
+        font-size: 2.5rem;
+      }
+
+      .title-group h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #f8fafc;
+      }
+
+      .title-group p {
+        color: #94a3b8;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1rem;
+        border-radius: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+      }
+
+      .btn-primary {
+        background: #10b981;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #059669;
+      }
+
+      .btn-secondary {
+        background: #1e293b;
+        color: #e2e8f0;
+        border: 1px solid #334155;
+      }
+
+      .btn-secondary:hover {
+        background: #334155;
+      }
+
+      .stats {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #1e293b;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+      }
+
+      .stat-value {
+        color: #10b981;
+        font-weight: 600;
+      }
+
+      .code-container {
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+
+      .code-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: #1e293b;
+        border-bottom: 1px solid #334155;
+      }
+
+      .code-header span {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .code-content {
+        padding: 1.5rem;
+        overflow-x: auto;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+
+      pre {
+        margin: 0;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8125rem;
+        line-height: 1.6;
+      }
+
+      /* Holiday-Themed JSON Syntax Highlighting */
+      .json-key { color: #f87171; } /* Christmas red - like ornaments */
+      .json-string { color: #4ade80; } /* Christmas green - like pine */
+      .json-number { color: #fbbf24; } /* Gold - like tinsel */
+      .json-boolean { color: #fb7185; } /* Candy cane pink */
+      .json-null { color: #e2e8f0; } /* Snow white */
+      .json-bracket { color: #67e8f9; } /* Icy blue - like icicles */
+
+      /* Subtle glow effects for extra festivity */
+      .json-key { text-shadow: 0 0 10px rgba(248, 113, 113, 0.3); }
+      .json-string { text-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
+      .json-number { text-shadow: 0 0 10px rgba(251, 191, 36, 0.4); }
+
+      .copy-feedback {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: #10b981;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateY(1rem);
+        transition: all 0.3s;
+        pointer-events: none;
+      }
+
+      .copy-feedback.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #0f172a; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="header-left">
+          <span class="icon">{data.icon}</span>
+          <div class="title-group">
+            <h1>{data.title}</h1>
+            <p>n8n Workflow JSON</p>
+          </div>
+        </div>
+        <div class="actions">
+          <a href={`${import.meta.env.BASE_URL}/${lesson.slug}`} class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Back to Tutorial
+          </a>
+          <button id="copyBtn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            Copy JSON
+          </button>
+        </div>
+      </header>
+
+      <div class="stats">
+        <div class="stat">
+          <span>Nodes:</span>
+          <span class="stat-value">{nodeCount}</span>
+        </div>
+      </div>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>workflow.json</span>
+        </div>
+        <div class="code-content">
+          <pre id="jsonContent" set:html={highlightedJson} />
+        </div>
+      </div>
+    </div>
+
+    <div id="copyFeedback" class="copy-feedback">Copied to clipboard!</div>
+
+    <script define:vars={{ workflowJson }}>
+      // Copy functionality
+      document.getElementById('copyBtn').addEventListener('click', async () => {
+        await navigator.clipboard.writeText(workflowJson);
+        const feedback = document.getElementById('copyFeedback');
+        feedback.classList.add('show');
+        setTimeout(() => feedback.classList.remove('show'), 2000);
+      });
+    </script>
+  </body>
+</html>

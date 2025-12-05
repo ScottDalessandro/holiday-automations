@@ -5,6 +5,8 @@ icon: "⏰"
 tutorialNumber: 1
 difficulty: "beginner"
 order: 1
+videoUrl: "https://youtu.be/s97z_Ip-3c8"
+workflowFile: "workflows/countdown-bot.json"
 skills:
   - "Cron Scheduling"
   - "JS Expressions"
