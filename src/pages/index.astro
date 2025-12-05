@@ -57,9 +57,156 @@ const tutorials = lessons
 
         <!-- Tutorials Section -->
         <Tutorials>
+            <!-- Start Here Card -->
+            <a href="/getting-started" class="fade-up flex flex-col h-full bg-transparent border-2 border-dashed border-amber-500/40 rounded-2xl p-8 hover:border-amber-500/60 hover:bg-amber-500/5 transition-all group">
+                <div class="text-4xl mb-4">🧭</div>
+                <span class="text-xs tracking-wide uppercase text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full mb-4 w-fit">RECOMMENDED FIRST</span>
+                <h4 class="text-2xl font-bold text-white mb-3">Getting Started Guide</h4>
+                <p class="text-slate-400 mb-6">New to n8n or this site? Start here. Learn how to navigate the tutorials, what you'll need, and how to get help when you're stuck.</p>
+                <span class="text-amber-400 group-hover:text-amber-300 font-semibold inline-flex items-center gap-2 mt-auto">
+                    Read the Guide →
+                </span>
+            </a>
             {tutorials.map((tutorial) => (
                 <TutorialCard {...tutorial} />
             ))}
+
+            <!-- Coming Soon Section -->
+            <Fragment slot="coming-soon">
+                <div class="relative w-full border-t border-slate-800 mt-16 pt-16">
+                    <!-- Divider Icon -->
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-950 px-3 text-slate-600">
+                        <iconify-icon icon="lucide:snowflake" width="20" stroke-width="1.5"></iconify-icon>
+                    </div>
+
+                    <!-- Section Header -->
+                    <div class="max-w-4xl mx-auto text-center mb-10 fade-up">
+                        <div class="text-slate-500 text-sm tracking-wide uppercase mb-2 font-semibold">COMING SOON</div>
+                        <h3 class="text-2xl font-bold text-white mb-3 tracking-tight">More Workshops on the Way</h3>
+                        <p class="text-slate-500 max-w-lg mx-auto text-sm leading-relaxed">
+                            These tutorials are in the works. Check back soon — or subscribe to get notified when they drop.
+                        </p>
+                    </div>
+
+                    <!-- Cards Grid -->
+                    <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 fade-up">
+
+                        <!-- Card 1: Naughty or Nice -->
+                        <div class="bg-slate-900/30 border border-slate-800/50 rounded-2xl p-6 opacity-70 relative overflow-hidden flex flex-col h-full before:absolute before:inset-0 before:bg-slate-950/20 before:rounded-2xl pointer-events-none">
+                            <div class="relative z-10 flex flex-col h-full">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-3xl">🎁</span>
+                                    <span class="bg-slate-700/50 text-slate-400 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Coming Soon</span>
+                                </div>
+
+                                <div class="text-slate-600 text-xs font-semibold uppercase tracking-wider mb-1">Tutorial 3</div>
+                                <h4 class="text-lg font-bold text-slate-300 mb-2">Naughty or Nice Calculator</h4>
+                                <p class="text-slate-500 text-sm leading-relaxed mb-4 flex-grow">
+                                    Build a viral holiday quiz that uses AI to generate personalized 'Nice List' certificates. Kids answer fun questions, get their score, and receive a printable certificate.
+                                </p>
+
+                                <div class="flex justify-between items-center border-t border-slate-800/50 pt-3 mb-3">
+                                    <span class="text-slate-600 text-xs flex items-center gap-1">
+                                        <iconify-icon icon="lucide:clock" width="12"></iconify-icon> 25 min
+                                    </span>
+                                    <div class="flex text-slate-600 gap-0.5">
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="opacity-30"></iconify-icon>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">Webhooks</span>
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">AI Integration</span>
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">HTML Responses</span>
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">PDF Generation</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Secret Santa -->
+                        <div class="bg-slate-900/30 border border-slate-800/50 rounded-2xl p-6 opacity-70 relative overflow-hidden flex flex-col h-full before:absolute before:inset-0 before:bg-slate-950/20 before:rounded-2xl pointer-events-none">
+                            <div class="relative z-10 flex flex-col h-full">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-3xl">🎁</span>
+                                    <span class="bg-slate-700/50 text-slate-400 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full">Coming Soon</span>
+                                </div>
+
+                                <div class="text-slate-600 text-xs font-semibold uppercase tracking-wider mb-1">Tutorial 4</div>
+                                <h4 class="text-lg font-bold text-slate-300 mb-2">Secret Santa Matcher & Emailer</h4>
+                                <p class="text-slate-500 text-sm leading-relaxed mb-4 flex-grow">
+                                    Upload a list of participants, and n8n automatically pairs everyone for Secret Santa, then emails each person their match. No more drawing names from a hat!
+                                </p>
+
+                                <div class="flex justify-between items-center border-t border-slate-800/50 pt-3 mb-3">
+                                    <span class="text-slate-600 text-xs flex items-center gap-1">
+                                        <iconify-icon icon="lucide:clock" width="12"></iconify-icon> 20 min
+                                    </span>
+                                    <div class="flex text-slate-600 gap-0.5">
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="opacity-30"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="opacity-30"></iconify-icon>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">Data Randomization</span>
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">Loops</span>
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">Bulk Email</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Call Santa -->
+                        <div class="bg-slate-900/30 border border-slate-800/50 rounded-2xl p-6 opacity-70 relative overflow-hidden flex flex-col h-full before:absolute before:inset-0 before:bg-slate-950/20 before:rounded-2xl pointer-events-none">
+                            <div class="relative z-10 flex flex-col h-full">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-3xl">☎️</span>
+                                    <span class="bg-rose-500/20 text-rose-400 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border border-rose-500/20">Advanced</span>
+                                </div>
+
+                                <div class="text-slate-600 text-xs font-semibold uppercase tracking-wider mb-1">Tutorial 5</div>
+                                <h4 class="text-lg font-bold text-slate-300 mb-2">Call Santa Hotline</h4>
+                                <p class="text-slate-500 text-sm leading-relaxed mb-4 flex-grow">
+                                    Build a real phone number where kids can talk to Santa using AI voice technology. Santa responds with a realistic voice and remembers the conversation!
+                                </p>
+
+                                <div class="flex justify-between items-center border-t border-slate-800/50 pt-3 mb-3">
+                                    <span class="text-slate-600 text-xs flex items-center gap-1">
+                                        <iconify-icon icon="lucide:clock" width="12"></iconify-icon> 30-40 min
+                                    </span>
+                                    <div class="flex text-slate-600 gap-0.5">
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                        <iconify-icon icon="lucide:star" width="12" class="fill-current"></iconify-icon>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">Voice APIs</span>
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">Speech-to-Text</span>
+                                    <span class="bg-slate-800/50 text-slate-500 text-xs px-3 py-1 rounded-full border border-slate-800">Conversational AI</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Note -->
+                    <div class="max-w-xl mx-auto text-center mt-10 fade-up">
+                        <p class="text-slate-600 text-sm">
+                            Want these sooner? Let me know which one you're most excited about.
+                            <a href="https://tkowners.slack.com/archives/C0A11823XTP" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-slate-400 underline ml-1 transition-colors">Drop a message in Slack →</a>
+                        </p>
+                    </div>
+                </div>
+            </Fragment>
         </Tutorials>
 
         <!-- Footer -->
