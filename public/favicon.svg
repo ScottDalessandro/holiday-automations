@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Candy cane curve -->
+  <path d="M16 2 C10 2 6 6 6 12 L6 28 L10 28 L10 12 C10 8 12 6 16 6 C20 6 22 8 22 12 L22 28 L26 28 L26 12 C26 6 22 2 16 2 Z" fill="#fff"/>
+  <!-- Red stripes -->
+  <path d="M16 2 C10 2 6 6 6 12 L6 28 L10 28 L10 12 C10 8 12 6 16 6 C20 6 22 8 22 12 L22 28 L26 28 L26 12 C26 6 22 2 16 2 Z" fill="url(#stripes)" />
+  <defs>
+    <pattern id="stripes" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <rect width="3" height="6" fill="#e11d48"/>
+    </pattern>
+  </defs>
+</svg>
