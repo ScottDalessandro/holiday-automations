@@ -9,7 +9,7 @@ interface NavBulb {
 }
 
 const navBulbs: NavBulb[] = [
-    { color: 'text-violet-400', bg: 'bg-violet-400', label: 'Getting Started', link: '/getting-started' },
+    { color: 'text-violet-400', bg: 'bg-violet-400', label: 'Getting Started', link: `${import.meta.env.BASE_URL}/getting-started` },
     { color: 'text-rose-500', bg: 'bg-rose-500', label: 'Intro Video', link: '#about' },
     { color: 'text-emerald-500', bg: 'bg-emerald-500', label: 'Tutorials', link: '#tutorials' },
     { color: 'text-amber-400', bg: 'bg-amber-400', label: 'About', link: '#about' },
@@ -112,9 +112,13 @@ bulbs.forEach((bulbWrapper) => {
         if (external && link) {
             setTimeout(() => window.open(link, '_blank'), 150);
         } else if (link) {
-            const target = document.querySelector(link);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
+            if (link.startsWith('#')) {
+                const target = document.querySelector(link);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            } else {
+                setTimeout(() => window.location.href = link, 150);
             }
         }
     });
