@@ -41,12 +41,11 @@ const navBulbs: NavBulb[] = [
                 const dist = Math.abs(i - center);
                 const offset = (dist * dist) * 1.2 + 0.5;
                 const isActive = !minimal || config.alwaysActive;
-                const bulbColor = isActive ? config.bg : 'bg-slate-700';
-                const textColor = isActive ? config.color : 'text-slate-700';
-                const glowStyle = isActive ? 'shadow-[0_0_10px_2px_currentColor]' : 'shadow-none';
+                // Keep colors but slightly dim inactive bulbs
+                const opacityClass = isActive ? '' : 'opacity-70';
                 return (
                     <div
-                        class={`flex flex-col items-center group relative ${isActive ? 'bulb-interactive cursor-pointer' : 'cursor-default opacity-40'}`}
+                        class={`flex flex-col items-center group relative ${isActive ? 'bulb-interactive cursor-pointer' : 'cursor-default'} ${opacityClass}`}
                         style={`transform: translateY(${offset * 8}px)`}
                         data-link={isActive ? config.link : ''}
                         data-external={config.external || false}
@@ -56,10 +55,10 @@ const navBulbs: NavBulb[] = [
                         <!-- Wire connector -->
                         <div class={`w-0.5 h-3 md:h-5 bg-slate-700 ${isActive ? 'group-hover:bg-slate-500' : ''} transition-colors`}></div>
 
-                        <!-- Bulb Glass -->
+                        <!-- Bulb Glass - always colorful -->
                         <div
-                            class={`bulb-glass w-4 h-4 md:w-5 md:h-5 rounded-full ${bulbColor} ${glowStyle} ${textColor} transition-all duration-300`}
-                            style={isActive ? `animation: light-turn-on 0.5s ease-out forwards ${i * 0.2 + 0.5}s` : ''}
+                            class={`bulb-glass w-4 h-4 md:w-5 md:h-5 rounded-full ${config.bg} shadow-[0_0_10px_2px_currentColor] ${config.color} transition-all duration-300`}
+                            style={`animation: light-turn-on 0.5s ease-out forwards ${i * 0.2 + 0.5}s`}
                         ></div>
 
                         <!-- Tooltip (only for active bulbs) -->
