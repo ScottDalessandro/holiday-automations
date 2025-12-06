@@ -42,6 +42,7 @@ export const POST: APIRoute = async ({ request }) => {
           email: email,
           utm_source: 'website',
           utm_medium: 'footer_form',
+          send_welcome_email: true,
         }),
       }
     );
