@@ -1,4 +1,5 @@
 ---
+import Analytics from '@vercel/analytics/astro';
 import Background from '../components/Background.astro';
 import LessonNav from '../components/LessonNav.astro';
 import LessonHero from '../components/LessonHero.astro';
@@ -126,7 +127,7 @@ const {
     </main>
 
     <Footer compact />
-
+    <Analytics />
   </body>
 </html>
 
